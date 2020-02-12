@@ -1,0 +1,5 @@
+\import chapter1.definitions.def
+
+\func proofAssoc {A B C D : \Type} {h : A -> B} {g : B -> C} {f : C -> D}:
+  (h o (g o f)) = ((h o g) o f) =>
+  refl(A -> D)(\lam (x : A) => f(g(h x)))
