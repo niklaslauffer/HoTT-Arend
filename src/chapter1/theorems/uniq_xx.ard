@@ -1,0 +1,7 @@
+\import chapter1.definitions.def
+
+\func C_prod {A B : \Type} : A xx B -> \Type =>
+  \lam (u : A xx B) => ((u.1, u.2) = u)
+
+\func uniq_xx {A B : \Type} : \Pi(w : A xx B) -> ((w.1, w.2) = w) =>
+  indAxB(C_prod)(\lam (a : A) (b : B) => refl(A xx B)(a,b))
