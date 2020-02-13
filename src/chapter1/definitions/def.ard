@@ -30,11 +30,24 @@
 
 \data Zero
 
-\data One | one
+-- Exists since functions from zero just trivially do
+\func recZero (C : \Type) (z : Zero) : C
+-- Exists since functions from zero just trivially do
+\func indZero (C : Zero -> \Type) (z : Zero) : C(z)
 
-\data Two
-  | false
-  | true
+\data One | star
+
+\func recOne (C : \Type) (c : C) (z : One) : C
+  | C, c, One.star => c
+  | C, c, _ => {?}
+
+\func indOne (C : One -> \Type) (c : C(One.star)) (x : One) : C(x)
+  | C, c, One.star => c
+  | _, _, _ => {?}
+
+\data Two | false | true
+
+\func recTwo (C : \Type) ()
 
 -- we will use Arend's build int Natural type defined as
 {-
