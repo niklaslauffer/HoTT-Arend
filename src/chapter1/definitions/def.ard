@@ -1,9 +1,6 @@
-
-
 -- we use a little o for composition
 \func \infixl 6 o {A B C : \Type} (f : A -> B) (g : B -> C) =>
   \lam (x : A) => g (f x)
-
 
 -- inline for the dependent product type
 \func \infix 6 && (A : \Type) (B : A -> \Type) => \Sigma (x : A) (b : B(x))
@@ -17,17 +14,16 @@
 \func pr2 {A B : \Type} : A xx B -> B
   => \lam (x : A xx B) => x.2
 
-\func recAxB {A B : \Type} : \Pi(C : \Type) -> (A -> B -> C) -> ((A xx B) -> C)
-  => \lam C => \lam g => (\lam (x : A xx B) => g(pr1 x)(pr2 x))
+\func recAxB {A B : \Type} (C : \Type) (g : A -> B -> C) : ((A xx B) -> C)
+  => (\lam (x : A xx B) => g(pr1 x)(pr2 x))
 
-\func indAxB {A B : \Type} : \Pi(C : A xx B -> \Type) -> (\Pi (x : A) (y : B) -> C(x,y)) -> \Pi(z : A xx B) -> C(z)
-  => \lam C => \lam g => \lam z => g(z.1)(z.2)
+\func indAxB {A B : \Type} (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y)) (z : A xx B) : C(z)
+  => g(z.1)(z.2)
 
 
 -- basic types
 
 \data Zero
-
 
 \data One | one
 
@@ -45,12 +41,11 @@
 
 
 -- operations
-
 \func neg (A : \Type) : \Type => A -> Zero
 
 -- standard refl type
-\func refl (A : \Type) : \Pi (a : A) -> (a = a)
-  => \lam a => path(\lam i => a)
+\func refl (A : \Type) (a : A) : (a = a)
+  => path(\lam i => a)
 
 -- Standard isomorphism definition
 \func ISO (A : \Type) (B : \Type) : \Type
