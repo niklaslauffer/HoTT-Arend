@@ -7,7 +7,8 @@
 
 -- inline for the dependent product type
 \func \infix 6 && (A : \Type) (B : A -> \Type) => \Sigma (x : A) (b : B(x))
--- definitions for the constant product type
+
+-- definitions for the simple product type
 \func \infix 6 xx (A B : \Type) : \Type => \Sigma (x : A) B
 
 \func pr1 {A B : \Type} : A xx B -> A
@@ -54,6 +55,3 @@
 -- Standard isomorphism definition
 \func ISO (A : \Type) (B : \Type) : \Type
   => \Sigma (f : A -> B) (g : B -> A) (P1 : (\Pi(a : A) -> g (f a) = a)) (P2 : (\Pi(b : B) -> f (g b) = b))
-
-
-
