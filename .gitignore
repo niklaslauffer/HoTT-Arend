@@ -1,3 +1,4 @@
 bin/
-*.iml
 .idea/
+*.iml
+arend.yaml
