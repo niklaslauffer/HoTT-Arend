@@ -32,7 +32,9 @@
 
 \data One | one
 
-\data Two | zero | one
+\data Two
+  | false
+  | true
 
 -- we will use Arend's build int Natural type defined as
 {-
