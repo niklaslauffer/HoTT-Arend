@@ -8,17 +8,22 @@
 -- definitions for the simple product type
 \func \infix 6 xx (A B : \Type) : \Type => \Sigma (x : A) B
 
-\func pr1 {A B : \Type} : A xx B -> A
-=> \lam (x : A xx B) => x.1
+-- Redundant clauses are included to show that only by computation do we understand the redundancy
+\func recAxB {A B : \Type} (C : \Type) (g : A -> B -> C) (z : A xx B) : C
+  | C, g, (a,b) => g(a)(b)
+  | C, g, _ => {?}
 
-\func pr2 {A B : \Type} : A xx B -> B
-  => \lam (x : A xx B) => x.2
-
-\func recAxB {A B : \Type} (C : \Type) (g : A -> B -> C) : ((A xx B) -> C)
-  => (\lam (x : A xx B) => g(pr1 x)(pr2 x))
-
+-- This definition of the inductor is more correct as it reflects the actual computation rule
+-- If you view the proof for uniqueness then in context the cononical projections start to make sense
 \func indAxB {A B : \Type} (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y)) (z : A xx B) : C(z)
-  => g(z.1)(z.2)
+  | C, g, (a,b) => g(a)(b)
+  | C, g, _ => {?}
+
+\func pr1 {A B : \Type}  (z : A xx B) : A
+  => recAxB(A)(\lam a b => a)(z)
+
+\func pr2 {A B : \Type}  (z : A xx B) : B
+  => recAxB(B)(\lam a b => b)(z)
 
 
 -- basic types
