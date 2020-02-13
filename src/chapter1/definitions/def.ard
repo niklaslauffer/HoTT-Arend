@@ -1,6 +1,6 @@
 -- standard refl type
-\func refl (A : \Type) : \Pi (a : A) -> (a = a)
-  => \lam a => path(\lam i => a)
+\func refl (A : \Type) (a : A)
+  => path(\lam i => a)
 
 
 -- we use a little o for composition
@@ -8,7 +8,7 @@
   \lam (x : A) => g (f x)
 
 
--- definitions for the dependent product type
+-- definitions for the simple product type
 \func \infix 6 xx (A B : \Type) : \Type => \Sigma (x : A) B
 
 \func pr1 {A B : \Type} : A xx B -> A
