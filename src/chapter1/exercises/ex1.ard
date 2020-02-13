@@ -3,7 +3,3 @@
 \func proofAssoc {A B C D : \Type} {h : C -> D} {g : B -> C} {f : A -> B}
 	: (h o (g o f)) = ((h o g) o f) 
 	=> refl(A -> D)(\lam (x : A) => h(g(f(x))))
-
-\func recProdFromProj {A B C : \Type}
-	: (A -> B -> C) -> (A xx B) -> C
-	=> \lam (g : A -> B -> C) => \lam (p : A x B) => g(pr1(p))(pr2(p))
