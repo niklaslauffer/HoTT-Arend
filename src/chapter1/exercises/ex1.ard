@@ -1,4 +1,4 @@
-\import src.chapter1.definitions.def
+\import chapter1.definitions.def
 
 -- Ex 1.1
 \func proofAssoc {A B C D : \Type} {h : C -> D} {g : B -> C} {f : A -> B}
