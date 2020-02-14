@@ -82,7 +82,7 @@
 \func neg (A : \Type) : \Type
 	=> A -> Zero
 
--- standard refl type
+-- standard refl function
 \func refl (A : \Type) (a : A) : (a = a)
 	=> path(\lam i => a)
 
