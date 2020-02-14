@@ -8,34 +8,44 @@
 	(f : A -> B) (g : B -> C) : A -> C
 	=> g o f
 
--- inline for the dependent product type
-\func \infix 6 && (A : \Type) (B : A -> \Type) : \Type
-	=> \Sigma (x : A) (b : B(x))
-
 -- definitions for the simple product type
 \func \infix 6 xx (A B : \Type) : \Type
 	=> \Sigma (x : A) B
 
 -- Redundant clauses are included to show that only by computation do we understand the redundancy
-\func recAxB {A B : \Type}
+\func recAxxB {A B : \Type}
 	(C : \Type) (g : A -> B -> C) (z : A xx B) : C
 	| C, g, (a,b) => g(a)(b)
 	| C, g, _ => {?}
 
 -- This definition of the inductor is more correct as it reflects the actual computation rule
 -- If you view the proof for uniqueness then in context the cononical projections start to make sense
-\func indAxB {A B : \Type}
+\func indAxxB {A B : \Type}
 	(C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y)) (z : A xx B) : C(z)
 	| C, g, (a,b) => g(a)(b)
 	| C, g, _ => {?}
 
 \func pr1 {A B : \Type}
 	(z : A xx B) : A
-	=> recAxB(A)(\lam a b => a)(z)
+	=> recAxxB(A)(\lam a b => a)(z)
 
 \func pr2 {A B : \Type}
 	(z : A xx B) : B
-	=> recAxB(B)(\lam a b => b)(z)
+	=> recAxxB(B)(\lam a b => b)(z)
+
+-- inline for the dependent product type
+\func \infix 6 && (A : \Type) (B : A -> \Type) : \Type
+	=> \Sigma (x : A) (b : B(x))
+
+\func indA&&B {A : \Type} {B : A -> \Type}
+	(C : A && B -> \Type) (g : \Pi(x : A) (y : B(x)) -> C(x,y)) (z : A && B) : C(z)
+	| C, g, (a,b) => g(a)(b)
+	| C, g, _ => {?}
+
+\func recA&&B {A : \Type} {B : A -> \Type}
+	(C : \Type) (g : \Pi(x : A) (y : B(x)) -> C) (z : A && B) : C
+	| C, g, (a,b) => g(a)(b)
+	| C, g, _ => {?}
 
 -- basic types
 
@@ -68,7 +78,6 @@
 \data Fin (n : Nat) \with
   | suc n => { fzero | fsuc (Fin n) }
 
-
 -- operations
 \func neg (A : \Type) : \Type
 	=> A -> Zero
@@ -77,6 +86,10 @@
 \func refl (A : \Type) (a : A) : (a = a)
 	=> path(\lam i => a)
 
--- Standard isomorphism definition
+-- Standard equality definitions
 \func ISO (A : \Type) (B : \Type) : \Type
 	=> \Sigma (f : A -> B) (g : B -> A) (pA : (\Pi(a : A) -> g (f a) = a)) (pB : (\Pi(b : B) -> f (g b) = b))
+
+\func sameFunc {A B : \Type}
+	(f : A -> B) (g : A -> B) : \Type
+	=> \Pi(a : A) -> (f(a) = g(a))
