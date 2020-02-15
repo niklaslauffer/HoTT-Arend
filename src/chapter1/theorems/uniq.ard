@@ -8,4 +8,4 @@
 \func uniq_One : \Pi(w : One) -> (w = One.star) => indOne(\lam x => x = star)(refl One star)
 
 \func uniq_Two : \Pi(w : Two) -> (w = zero) ++ (w = one) =>
-  indTwo (\lam (w : Two) => ((w = zero) ++ (w = one))) ((inl{zero = zero}{zero = one} (refl(Two)(zero)))) (inr{(one = zero)}{one = one} (refl(Two)(one)))
+  indTwo (\lam (w : Two) => (w = zero) ++ (w = one)) (inl{zero = zero}{zero = one} (refl(Two)(zero))) (inr{one = zero}{one = one} (refl(Two)(one)))
