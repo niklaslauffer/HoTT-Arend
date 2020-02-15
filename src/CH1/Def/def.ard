@@ -48,12 +48,10 @@
   | C, g, _ => {?}
 
 \func pr1&& {A : \Type} {B : A -> \Type}
-  (x : A && B) : A
-  => recA&&B{A}{B} A (\lam a b => a)(x)
+            (x : A && B) : A => recA&&B{A}{B} A (\lam a b => a)(x)
 
 \func pr2&& {A : \Type} {B : A -> \Type}
-            (x : A && B) : B(pr1&&{A}{B} x)
-  => indA&&B{A}{B} (\lam y => B(pr1&&{A}{B} y)) (\lam a b => b)(x)
+            (x : A && B) : B(pr1&&{A}{B} x) => indA&&B{A}{B} (\lam y => B(pr1&&{A}{B} y)) (\lam a b => b)(x)
 
 -- Coproduct Type
 

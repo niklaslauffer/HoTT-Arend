@@ -1,4 +1,4 @@
-\import chapter1.definitions.def
+\import CH1.Def.def
 
 \func C_xx {A B : \Type} : A xx B -> \Type => \lam (u : A xx B) => (pr1 u, pr2 u) = u
 
