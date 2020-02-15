@@ -1,13 +1,13 @@
 \import chapter1.definitions.def
 
 -- Ex 1.1
+
 \func proofAssoc {A B C D : \Type} {h : C -> D} {g : B -> C} {f : A -> B}
-	: (h o (g o f)) = ((h o g) o f) 
-	=> {?}
+  : (h o (g o f)) = ((h o g) o f) => {?}
 
 -- Ex 1.2
 -- Use the projection operations (pr1 and pr2) to redefine the AxB recursor
+
 \func redef-RecAxxB {A B : \Type}
-	(C : \Type) (g : A -> B -> C) (z : A xx B) : C
-	=> {?}
+                    (C : \Type) (g : A -> B -> C) (z : A xx B) : C => {?}
 
