@@ -1,2 +1,19 @@
 \import CH1.Def.def
 
+-- Ex 1.2
+-- Use the projection operations (pr1 and pr2) to redefine the AxB recursor
+
+\func redef_recAxxB {A B : \Type} (C : \Type) (g : A -> B -> C) (z : A xx B) : C => {?}
+
+-- Obviously, \Type is not the intended type for this statement to inhabit: part of
+-- the exercise is the subtle question: which type does the below statement inhabit?
+-- HINT: compare the parameters of this and the above
+
+\func recAxxB_def_eq {A B : \Type} (C : \Type) (g : A -> B -> C) : \Type => {?}
+
+-- Essentially proceed as before
+
+\func redef_recSig {A : \Type} {B : A -> \Type} (C : \Type) (g : \Pi (a : A) -> B(a) -> C) (z : \Sigma (a : A) (b : B(a))) : C =>
+  {?}
+
+\func recSig_def_eq {A : \Type} {B : A -> \Type} (C : \Type) (g : \Pi (a : A) -> B(a) -> C) : \Type => {?}
