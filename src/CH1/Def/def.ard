@@ -15,17 +15,17 @@
 -- Redundant clauses are included to show that only by computation do we understand the redundancy
 
 \func recAxxB {A B : \Type}
-              (C : \Type) (g : A -> B -> C) (z : A xx B) : C
-  | C, g, (a,b) => g(a)(b)
-  | C, g, _ => {?}
+              (C : \Type) (g : A -> B -> C) (z : A xx B) : C \elim z
+  | (a,b) => g(a)(b)
+  | _ => {?}
 
 -- This definition of the inductor is more correct as it reflects the actual computation rule
 -- If you view the proof for uniqueness then in context the cononical projections start to make sense
 
 \func indAxxB {A B : \Type}
-              (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y)) (z : A xx B) : C(z)
-  | C, g, (a,b) => g(a)(b)
-  | C, g, _ => {?}
+              (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y)) (z : A xx B) : C(z) \elim z
+  | (a,b) => g(a)(b)
+  | _ => {?}
 
 \func pr1 {A B : \Type}
           (z : A xx B) : A => recAxxB(A)(\lam a b => a)(z)
@@ -38,14 +38,14 @@
 \func \infix 6 && (A : \Type) (B : A -> \Type) : \Type => \Sigma (x : A) (b : B(x))
 
 \func indA&&B {A : \Type} {B : A -> \Type}
-              (C : A && B -> \Type) (g : \Pi(x : A) (y : B(x)) -> C(x,y)) (z : A && B) : C(z)
-  | C, g, (a,b) => g(a)(b)
-  | C, g, _ => {?}
+              (C : A && B -> \Type) (g : \Pi(x : A) (y : B(x)) -> C(x,y)) (z : A && B) : C(z) \elim z
+  | (a,b) => g(a)(b)
+  | _ => {?}
 
 \func recA&&B {A : \Type} {B : A -> \Type}
-              (C : \Type) (g : \Pi(x : A) (y : B(x)) -> C) (z : A && B) : C
-  | C, g, (a,b) => g(a)(b)
-  | C, g, _ => {?}
+              (C : \Type) (g : \Pi(x : A) (y : B(x)) -> C) (z : A && B) : C \elim z
+  | (a,b) => g(a)(b)
+  | _ => {?}
 
 \func pr1&& {A : \Type} {B : A -> \Type}
             (x : A && B) : A => recA&&B{A}{B} A (\lam a b => a)(x)
@@ -62,16 +62,16 @@
 \func \infix 5 ++ (A B : \Type) : \Type => coproduct A B
 
 \func recA++B {A B : \Type}
-              (C : \Type) (g0 : A -> C) (g1 : B -> C) (x : A ++ B) : C
-  | C , g0, g1, inl a => g0 a
-  | C , g0, g1, inr b => g1 b
-  | _, _, _, _ => {?}
+              (C : \Type) (g0 : A -> C) (g1 : B -> C) (x : A ++ B) : C \elim x
+  | inl a => g0 a
+  | inr b => g1 b
+  | _ => {?}
 
 \func indA++B {A B : \Type}
-              (C : A ++ B -> \Type) (g0 : \Pi(a : A) -> C(inl a)) (g1 : \Pi(b : B) -> C(inr b)) (x : A ++ B) : C x
-  | C, g0, g1, inl a => g0 a
-  | C, g0, g1, inr b => g1 b
-  | _, _, _, _ => {?}
+              (C : A ++ B -> \Type) (g0 : \Pi(a : A) -> C(inl a)) (g1 : \Pi(b : B) -> C(inr b)) (x : A ++ B) : C x \elim x
+  | inl a => g0 a
+  | inr b => g1 b
+  |  _ => {?}
 
 -- basic types
 
@@ -87,25 +87,32 @@
 
 \data One | star
 
-\func recOne (C : \Type) (c : C) (z : One) : C
-  | C, c, star => c
-  | C, c, _ => {?}
+\func recOne (C : \Type) (c : C) (z : One) : C \elim z
+  | star => c
+  | _ => {?}
 
-\func indOne (C : One -> \Type) (c : C star) (x : One) : C x
-  | C, c, One.star => c
-  | _, _, _ => {?}
+\func indOne (C : One -> \Type) (c : C star) (x : One) : C x \elim x
+  | One.star => c
+  | _ => {?}
 
 \data Two | zero | one
 
-\func recTwo (C : \Type) (c0 : C) (c1 : C) (x : Two) : C
-  | C , c0, _, zero => c0
-  | C , _, c1, one => c1
-  | _ , _, _, _ => {?}
+\func recTwo (C : \Type) (c0 : C) (c1 : C) (x : Two) : C \elim x
+  | zero => c0
+  | one => c1
+  | _ => {?}
 
-\func indTwo (C : Two -> \Type) (c0 : C zero) (c1 : C one) (x : Two) : C x
-  | C, c0, c1, zero => c0
-  | C, c0, c1, one => c1
-  | _, _, _, _ => {?}
+\func indTwo (C : Two -> \Type) (c0 : C zero) (c1 : C one) (x : Two) : C x \elim x
+  | zero => c0
+  | one => c1
+  | _ => {?}
+
+-- Note that idp is used when reflexive is needed in pattern matching, because I can't view the standard library
+
+\func indPath {A : \Type} (C : \Pi (x y : A) -> (x = y) -> \Type) (c : \Pi(x : A) -> (C x x (refl(A)(x)))) (x y : A) (p : x = y) : C(x)(y)(p)
+\elim y, p
+  | x, idp => c(x)
+  | _, _ => {?}
 
 -- we will use Arend's build int Natural type defined as
 {-
@@ -123,7 +130,7 @@
 
 -- standard refl function
 
-\func refl (A : \Type) (a : A) : a = a => path(\lam i => a)
+\func refl (A : \Type) (a : A) : a = a => path(\lam _ => a)
 
 -- Standard equality definitions
 
