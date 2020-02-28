@@ -1,0 +1,5 @@
+\import CH1.Def.def
+
+\func transport {A : \Type} (B : A -> \Type) {a a' : A} (p : a = a') : B a -> B a'
+  => indPath(\lam x y => \lam p => B(x) -> B(y))(\lam x => \lam (y : B x) => y) a a' p
+
