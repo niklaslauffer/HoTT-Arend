@@ -15,9 +15,7 @@
 \elim p
   | idp  => c(x)
 
-\func indPath' {A : \Type} (C : \Pi (x y : A) -> (x = y) -> \Type) (c : \Pi(x : A) -> (C x x (refl(A)(x)))) (x y : A) (p : x = y) : C(x)(y)(p)
-=> \case  y, p \with {
-| x , idp => c(x)}
+
 
 -- idp is how we denote the reflexivity element of x = x.
 
@@ -40,17 +38,6 @@
 
 -- note that we did a double induction. In truth, I could have just used identity map for helper,
 -- but in order to keep the concatenation symmetric on the paths, I used the path induction on the helper.
-
-\func \infix 3 *af {A : \Type} {x y z : A} (p : x = y) (q : y = z) :  (x = z) \elim y , p
-  | x , idp => \elim x , q
-  | z , idp => idp
-
-
-\func \infix 3 *af' {A : \Type} {x y z : A} (p : x = y) (q : y = z) :  (x = z) =>
-  \case y , p \as y', p' \return x = z \with {
-    | x , idp => q
-
-  }
 
 -- I don't know how to do it via inductor.
 \func \infix 3 ab {A : \Type} (x y z : A) : (x = y) -> (y = z) -> (x = z)
