@@ -1,0 +1,29 @@
+\import CH2.CH2_1
+\import CH2.CH2_2
+\import CH2.CH2_3
+
+-- 2.4 Homotopies and equivalences
+
+-- tranditionally two functions are equal if they take on the same value, in homotopy theory, this is the definition
+-- of homotopy:
+
+\func \infix 4 ~ {A : \Type} {P : A -> \Type} (f g : \Pi (x : A) -> P(x)) : \Type => \Pi (x : A) -> (f x = g x)
+
+-- we will get back to how f ~ g relate to the type f = g (spoiler alert, they are equivalent, via the function e
+-- extionality)
+
+-- it is easy to show that ~ is a equivalence relation.
+
+\func ~_is_reflexive {A : \Type} {P : A -> \Type} (f : \Pi (x : A) -> P(x)) : f ~{A} {P} f => \lam (x : A) => idp
+
+\func ~_is_symmetric {A : \Type} {P : A -> \Type} (f g : \Pi (x : A) -> P(x)) : f ~ {A} {P} g -> g ~{A} {P} f
+  => \lam H  x => inv (H x)
+
+\func ~_is_transitive {A : \Type} {P : A -> \Type} (f g h : \Pi (x : A) -> P(x)) : f ~{A} {P} g -> g ~{A}{P} h -> f ~{A}{P} h
+  => \lam H H' x => (H x) * (H' x)
+
+-- functions behave categorically like functors, and homotopies behave like natural transformations:
+
+\func ~_is_natural_transformation {A B : \Type} { x y : A} (p : x = y) (f g : A -> B) (H : f ~{A}{\lam x => B} g)
+  : (H x) * (ap{A} g p) = (ap f p) * (H y) \elim p | idp => (inv (idp_left_unit{B} {f x} {g x} {H x})) * idp_right_unit
+

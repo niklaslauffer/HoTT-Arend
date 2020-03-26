@@ -17,7 +17,7 @@
 \func recAxxB {A B : \Type}
               (C : \Type) (g : A -> B -> C) (z : A xx B) : C \elim z
   | (a,b) => g(a)(b)
-  | _ => {?}
+
 
 -- This definition of the inductor is more correct as it reflects the actual computation rule
 -- If you view the proof for uniqueness then in context the cononical projections start to make sense
@@ -25,7 +25,6 @@
 \func indAxxB {A B : \Type}
               (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y)) (z : A xx B) : C(z) \elim z
   | (a,b) => g(a)(b)
-  | _ => {?}
 
 \func pr1 {A B : \Type}
           (z : A xx B) : A => recAxxB(A)(\lam a b => a)(z)
@@ -40,12 +39,11 @@
 \func indA&&B {A : \Type} {B : A -> \Type}
               (C : A && B -> \Type) (g : \Pi(x : A) (y : B(x)) -> C(x,y)) (z : A && B) : C(z) \elim z
   | (a,b) => g(a)(b)
-  | _ => {?}
 
 \func recA&&B {A : \Type} {B : A -> \Type}
               (C : \Type) (g : \Pi(x : A) (y : B(x)) -> C) (z : A && B) : C \elim z
   | (a,b) => g(a)(b)
-  | _ => {?}
+
 
 \func pr1&& {A : \Type} {B : A -> \Type}
             (x : A && B) : A => recA&&B{A}{B} A (\lam a b => a)(x)
@@ -65,13 +63,11 @@
               (C : \Type) (g0 : A -> C) (g1 : B -> C) (x : A ++ B) : C \elim x
   | inl a => g0 a
   | inr b => g1 b
-  | _ => {?}
 
 \func indA++B {A B : \Type}
               (C : A ++ B -> \Type) (g0 : \Pi(a : A) -> C(inl a)) (g1 : \Pi(b : B) -> C(inr b)) (x : A ++ B) : C x \elim x
   | inl a => g0 a
   | inr b => g1 b
-  |  _ => {?}
 
 -- basic types
 
@@ -89,30 +85,26 @@
 
 \func recOne (C : \Type) (c : C) (z : One) : C \elim z
   | star => c
-  | _ => {?}
 
 \func indOne (C : One -> \Type) (c : C star) (x : One) : C x \elim x
   | One.star => c
-  | _ => {?}
+
 
 \data Two | zero | one
 
 \func recTwo (C : \Type) (c0 : C) (c1 : C) (x : Two) : C \elim x
   | zero => c0
   | one => c1
-  | _ => {?}
 
 \func indTwo (C : Two -> \Type) (c0 : C zero) (c1 : C one) (x : Two) : C x \elim x
   | zero => c0
   | one => c1
-  | _ => {?}
 
 -- Note that idp is used when reflexive is needed in pattern matching, because I can't view the standard library
 
 \func indPath {A : \Type} (C : \Pi (x y : A) -> (x = y) -> \Type) (c : \Pi(x : A) -> (C x x (refl(A)(x)))) (x y : A) (p : x = y) : C(x)(y)(p)
 \elim y, p
   | x, idp => c(x)
-  | _, _ => {?}
 
 -- we will use Arend's build int Natural type defined as
 {-
@@ -124,7 +116,7 @@
 \data Fin (n : Nat) \with
   | suc n => { fzero | fsuc (Fin n) }
 
--- operations
+-- Negation of a type
 
 \func neg (A : \Type) : \Type => A -> Zero
 
@@ -132,7 +124,8 @@
 
 \func refl (A : \Type) (a : A) : a = a => path(\lam _ => a)
 
--- Standard equality definitions
+-- Standard equality definitions for types and functions (which is equal to
+-- propositional equality for types and functions via univalence and function extensionality.
 
 \func ISO (A : \Type) (B : \Type) : \Type =>
   \Sigma (f : A -> B) (g : B -> A) (pA : \Pi(a : A) -> g (f a) = a) (pB : \Pi(b : B) -> f (g b) = b)

@@ -1,0 +1,33 @@
+\import CH2.CH2_1
+
+-- 2.2 Functions are functors
+
+{- we are going to see how functions behave with paths. We will see that all functions takes paths
+to paths, and higher paths to higher paths. Topologically, we see that all functions are "continuous" -}
+
+-- functions take paths to paths, and it takes reflexivity to reflexivity:
+
+\func ap {A B : \Type} {x y : A} (f : A -> B) (p : x = y) : f x = f y \elim p
+  | idp => idp
+
+-- function ap is called application, or action on paths.
+
+-- basics lemmas about ap f, how it behave with composition and inverses:
+
+\func ap_commute_with_* {A B : \Type} {x y z : A} (p : x = y) (q : y = z) (f : A -> B) :
+  ap f (p * q) = (ap f p) * (ap f q)   \elim p , q
+  | idp , idp => idp
+
+\func ap_commute_with_inv {A B : \Type} {x y z : A} (p : x = y) (f : A -> B) : ap f (inv p) = inv (ap f p)
+  \elim p | idp => idp
+
+-- recall definition of composition of function
+
+\func \infixl 6 o {A B C : \Type}
+                  (g : B -> C) (f : A -> B) : A -> C => \lam (x : A) => g(f x)
+
+\func ap_commute_with_comp {A B C : \Type} {x y z : A} (p : x = y) (f : A -> B) (g : B -> C)
+  : ap g (ap f p) = ap (g o f) p \elim p | idp => idp
+
+-- note that these rule themselves have higher coherence laws.
+

@@ -1,0 +1,63 @@
+\import CH2.CH2_2
+\import CH2.CH2_1
+-- 2.3 Type Familes of Fibrations
+
+-- we want a dependent version of this, but we first need to have a transport along fibers,
+-- this is also called the "indescernibility of identicals" if we have P(x) propositions.
+
+\func transport {A : \Type} {x y : A} (P : A -> \Type) (p : x = y)  : P(x) -> P(y) \elim p
+  | idp => \lam x => x
+
+\func \infixr 5 _*  {A : \Type} {x y : A} {P : A -> \Type} (p : x = y) (u : P(x)) : P(y) => transport P p u
+
+-- so transport along reflexivity is just the identity map P(x) -> P(x).
+
+-- we think about tranport as "path lifting", it moves the fibers. Thus Sigma types in type theory
+-- look like fibrations. Given a path downstairs, we can show that there is a path lifting it.
+
+\func lift {A : \Type} {P : A -> \Type} {x y : A} (u : P(x))  (p : x = y) :
+  (x , u ) = {\Sigma (x : A) (P(x))} (y, transport P p u) \elim p
+ | idp => idp
+
+-- now we can show that this path covers p down below:
+
+\func pr_1 {A : \Type} {P : A -> \Type} : \Sigma (x : A) (P x) -> A => \lam u => u.1
+
+\func lift_is_a_lift {A : \Type} (P : A -> \Type) {x y : A} (p : x = y) (u : P(x)) :
+  ap (pr_1 {A} {P}) (lift {A} {P} u p) = p \elim p
+  | idp => idp
+
+-- note in classical homotopy theory, for fibrations there only "exist) liftings of paths, but here we have a canonical
+-- one.
+
+-- via transport and path lifting, we can make sense of a dependent version of ap.
+
+\func apd {A : \Type} {P : A -> \Type} {x y : A} (f : \Pi (x : A) -> P (x))  (p : x = y) :
+  (transport P p (f x)) = f y \elim p
+  | idp => idp
+
+-- now let's prove that transport does nothing on trivial families:
+
+\func constant_transport {A B : \Type} {x y : A} (f : A  -> B) (p : x = y) (b : B) : transport (\lam x => B) p b = b
+  \elim p | idp => idp
+
+\func apd=ap {A B : \Type} {x y : A} (f : A -> B) (p : x = y) :
+  apd f p = (constant_transport {A} {B} f p (f(x))) * (ap f p) \elim p
+  | idp => idp
+
+-- where is some more homotopy coherence for transport:
+
+\func transport_commute_with_can {A : \Type} {P : A -> \Type} {x y z : A} (p : x = y) (q : y = z) (u : P(x)) :
+  transport P q ( transport P p u) = transport P (p * q) u \elim p, q
+  | idp, idp => idp
+
+\func tranport_with_ap {A B : \Type} {x y : A} (f : A -> B) (P : B -> \Type) (p : x = y) (u : P (f x)) :
+  transport (P o f) p  u = transport P (ap f p) u \elim p
+  | idp => idp
+
+\func transport_with_fam_of_functions {A : \Type} {x y : A} (P Q : A -> \Type) (f : \Pi (x : A) -> P(x) -> Q(x))
+  (p : x = y) (u : P (x)) : transport Q p (f x u) = f y (transport P p u) \elim p
+  | idp => idp
+
+
+
