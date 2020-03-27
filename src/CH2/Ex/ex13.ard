@@ -1,0 +1,4 @@
+\import CH1.Def.def
+\import CH2.Def.def
+
+\func ttHt : (Two h Two) h Two => {?}

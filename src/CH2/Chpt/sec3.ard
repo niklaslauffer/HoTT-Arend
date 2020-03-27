@@ -1,5 +1,5 @@
-\import CH2.CH2_2
-\import CH2.CH2_1
+\import CH2.Chpt.sec1
+\import CH2.Chpt.sec2
 -- 2.3 Type Familes of Fibrations
 
 -- we want a dependent version of this, but we first need to have a transport along fibers,

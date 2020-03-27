@@ -1,6 +1,6 @@
-\import CH2.CH2_1
-\import CH2.CH2_2
-\import CH2.CH2_3
+\import CH2.Chpt.sec1
+\import CH2.Chpt.sec2
+\import CH2.Chpt.sec3
 
 -- 2.4 Homotopies and equivalences
 

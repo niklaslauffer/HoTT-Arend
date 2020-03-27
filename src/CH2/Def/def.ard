@@ -1,5 +1,26 @@
 \import CH1.Def.def
+\import CH2.Thms.paths
+
+
+\func \infixl 6 ~ {A B : \Type} (f : A -> B) (g : A -> B) : \Type => \Pi(a : A) -> f a = g a
+
+\func \infixl 7 c {A : \Type} {a b c : A} (p : a = b) (q : b = c) : a = c =>
+  tran p q
+
+\func id {A : \Type} (a : A) => a
+
+\func \infix 4 h (A : \Type) (B : \Type) : \Type =>
+  \Sigma (f : A -> B) (g : B -> A) (pA : g o f ~ id) (pB : f o g ~ id)
+
+\func \infix 4 hf {A A' : \Type} (B : A -> \Type) (B' : A' -> \Type) : \Type =>
+  \Sigma (f : B -> B') (g : B' -> B) (\Pi (a : A) (a' : A) -> \Sigma (pA : g o f ~ id) (pB : f o g ~ id))
+
+\func - {A : \Type} {x y : A} (p : x = y) => symm p
+
+\func reflrefl {A : \Type} (x : A) : refl A x = refl A x => refl(x = x)(refl A x)
+
+\func ap {A B : \Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y
+  => indPath{A}(\lam x y p => f x = f y)(\lam x => refl(B)(f x)) x y p
 
 \func transport {A : \Type} (B : A -> \Type) {a a' : A} (p : a = a') : B a -> B a'
-  => indPath(\lam x y => \lam p => B(x) -> B(y))(\lam x => \lam (y : B x) => y) a a' p
-
+  => indPath(\lam x y => \lam p => B x -> B y)(\lam x => \lam (y : B x) => y) a a' p
