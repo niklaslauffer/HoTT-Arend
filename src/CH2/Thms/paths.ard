@@ -1,0 +1,24 @@
+\import CH1.Def.def
+\import CH2.Def.def
+
+\func symm {A : \Type} {x y : A} (p : x = y) : (y = x)
+  => indPath(\lam x y p => y = x) (\lam x => refl A x) x y p
+
+\func tran {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z)
+  => indPath(\lam x y p => \Pi (z : A) (q : y = z) -> x = z)(\lam x z q => q) x y p z q
+
+\func RPisP {A : \Type} {x y : A} (p : x = y) : refl A x c p = p
+  => indPath(\lam x y p => p = refl A x c p)(\lam a => reflrefl a) x y p
+
+\func PRisP {A : \Type} {x y : A} (p : x = y) : p c refl A y = p
+  => indPath(\lam x y p => p c refl A y = p)(\lam y => reflrefl y) x y p
+
+\func iPPisR {A : \Type} {x y : A} (p : x = y) : - p c p = refl A y
+  => indPath(\lam x y p => - p c p = refl A y)(\lam y => reflrefl y) x y p
+
+\func PiPisR {A : \Type} {x y : A} (p : x = y) : p c - p = refl(A)(x)
+  => indPath(\lam x y p => p c - p = refl A x)(\lam y => reflrefl y) x y p
+
+\func iiPisP {A : \Type} {x y : A} (p : x = y) : - (- p) = p
+  => indPath(\lam x y p => - (- p) = p)(\lam a => reflrefl a) x y p
+

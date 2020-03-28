@@ -1,0 +1,16 @@
+\import CH1.Def.def
+\import CH2.Def.def
+
+--   i)
+\func equiv_product {A A' B B' : \Type} (f : A h A') (g : B h B') : A xx B h A' xx B'
+  => {?}
+
+--  ii)
+\func equiv_product_alt {A A' B B' : \Type} (f : A h A') (g : B h B') : A xx B h A' xx B'
+  => {?}
+
+-- iii)
+\func equiv_coproduct {A A' B B' : \Type} (f : A h A') (g : B h B') : A ++ B h A' ++ B' => {?}
+
+--  iv)
+\func equiv_&& {A A' : \Type} {B : A -> \Type} {B' : A' -> \Type} (f : A h A') (g : B hf B') : A && B h A' && B' => {?}
