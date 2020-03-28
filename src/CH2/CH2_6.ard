@@ -25,7 +25,7 @@ the canonical projection maps (x = y) -> (x.1 = y.1) xx (x.2 = y.2) is an equiva
 
 -- now we are going to find an inhabitant of isequiv xx=func, the first step is find the inverse map:
 
-\func xx=invers' {A B : \Type} {x y : A xx B} (r : x.1 = y.1) (s : x.2 = y.2) : x = y \elim x, y, r, s
+\func xx=inverse' {A B : \Type} {x y : A xx B} (r : x.1 = y.1) (s : x.2 = y.2) : x = y \elim x, y, r, s
   | (a,b) , (c,d) , idp, idp => idp
 
 \func xx=inverse {A B : \Type} {x y : A xx B} (q : (x.1 = y.1) xx (x.2 = y.2) ) : x = y => xx=inverse' q.1 q.2
