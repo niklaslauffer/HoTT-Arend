@@ -20,7 +20,7 @@
 \func ~_is_symmetric {A : \Type} {P : A -> \Type} (f g : \Pi (x : A) -> P(x)) : f ~ {A} {P} g -> g ~{A} {P} f
   => \lam H  x => inv (H x)
 
-\func ~_is_transitive {A : \Type} {P : A -> \Type} (f g h : \Pi (x : A) -> P(x)) : f ~{A} {P} g -> g ~{A}{P} h -> f ~{A}{P} h
+\func ~_is_transitive {A : \Type} {P : A -> \Type} {f g h : \Pi (x : A) -> P(x)} : f ~{A} {P} g -> g ~{A}{P} h -> f ~{A}{P} h
   => \lam H H' x => (H x) * (H' x)
 
 -- functions behave categorically like functors, and homotopies behave like natural transformations:
@@ -63,6 +63,19 @@
 
 \func qinv {A B : \Type} (f : A -> B) : \Type => \Sigma (g : B -> A) (alpha : f o g ~ {B} {\lam x => B} id) (beta : g o f ~ {A} {\lam x => A}  id)
 
+\func qinv_is_symmetric {A B : \Type} (f : A -> B) (H : qinv f) : qinv (H.1) => (f, H.3, H.2)
+
+\func qinv_is_transitive {A B C : \Type} (f : A -> B) (f' : B -> C) : qinv f -> qinv f' -> qinv (f' o f)
+  => \lam H H' => (H.1 o H'.1,
+                   ~_is_transitive {C}{\lam c => C} {(f' o f) o (H.1 o H'.1)} {f' o H'.1} {id} (qhelp f f' H H') (H'.2),
+                   ~_is_transitive {A}{\lam a => A} {(H.1 o H'.1) o (f' o f)} {H.1 o f} {id} (qhelp2 f f' H H') (H.3))
+
+\func qhelp {A B C : \Type} (f : A -> B) (f' : B -> C) (H : qinv f) (H' : qinv f')
+  : (f' o f) o (H.1 o H'.1) ~{C}{\lam c => C} f' o H'.1 => \lam c => ap f' (H.2 (H'.1 c))
+
+\func qhelp2 {A B C : \Type} (f : A -> B) (f' : B -> C) (H : qinv f) (H' : qinv f')
+  :  (H.1 o H'.1) o (f' o f)  ~{A}{\lam c => A} H.1 o f  => \lam a => ap H.1 (H'.3 (f a))
+
 -- identity always have a quasi-inverse:
 
 \func id_is_qinv {A : \Type} : qinv (id {A}) => (id {A}, \lam x => idp, \lam x => idp)
@@ -84,18 +97,62 @@
 
 -- given (g , alpha, beta), we map it to ((g, alpha), (g, beta)).
 
+-- we also have a map from isequiv to qinv, this is harder to describe:
 
--- we will get to more detail about quiv and isequiv later.
+-- \func isequiv_to_qinv {A B : \Type} (f : A -> B) : isequiv f -> qinv f => {?}
+
+\func g~h {A B : \Type} (f : A -> B) (H : isequiv f) : H.1.1 ~ {B} {\lam b => A} H.2.1 =>
+    ~_is_transitive {B} {\lam b => A}{H.1.1}{(H.2.1 o f) o H.1.1}{H.2.1}(g~hhelper1 f H) (g~hhelper3 f H)
+
+\func g~hhelper1 {A B : \Type} (f : A -> B) (H : isequiv f): H.1.1 ~ {B} {\lam b => A} (H.2.1 o f) o H.1.1 =>
+  ~_and_comp id (H.2.1 o f) H.1.1 (\lam a => inv (H.2.2 a))
+
+\func ~_and_comp {A B C : \Type} (f f' : B -> C) (g : A -> B) (H : f ~{B} {\lam b => C} f') : f o g ~{A} {\lam a => C} f' o g
+  => \lam a => H (g a)
+
+\func g~hhelper2 {A B : \Type} (f : A -> B) (H : isequiv f): (H.2.1 o f) o H.1.1 ~ {B} {\lam b => A} H.2.1 o (f o H.1.1) =>
+  ~_and_assoc_comp H.2.1 f H.1.1
+
+
+\func ~_and_assoc_comp {A B C D : \Type} (h : C -> D) (g : B -> C) (f : A -> B) : (h o g) o f ~{A}{\lam a => D} h o (g o f)
+  => \lam a => idp
+
 -- now an equivalence between A and B, which we have to construct, is f : A -> B together with an inhabitant of
 -- isequiv (f).
 
- \func \infix 9 ISO (A : \Type) (B : \Type) : \Type => \Sigma (f : A -> B) (isequiv f)
+\func g~hhelper3 {A B : \Type} (f : A -> B) (H : isequiv f): H.2.1 o (f o H.1.1) ~ {B} {\lam b => A} H.2.1 =>
+  ~_and_comp' (H.2.1) (f o H.1.1) (id) (H.1.2)
+
+\func ~_and_comp' {A B C : \Type} (f : B -> C) (g g' : A -> B) (H : g ~{A} {\lam a => B} g') : f o g ~{A} {\lam a => C} f o g'
+  => \lam a => ap f (H a)
+
+-- now we have to show that g o f ~ h o f:
+
+\func g_o_f~h_o_f {A B : \Type} (f : A -> B) (H : isequiv f) : H.1.1 o f ~ {A}{\lam a => A} H.2.1 o f =>
+  ~_and_comp H.1.1 H.2.1 f (g~h f H)
+
+\func g_o_f~id {A B : \Type} (f : A -> B) (H : isequiv f) : H.1.1 o f ~ {A} {\lam a => A} id =>
+  ~_is_transitive {A}{\lam a => A}{H.1.1 o f} {H.2.1 o f}{id} (g_o_f~h_o_f f H) H.2.2
+
+-- finally we can prove that we have isequiv f -> qinv f, this is also saying that qinv f and isequiv f are logically
+-- equivalent. We will show later that isequiv is a proposition, thus it is the propositional truncation of qinv f,
+-- from this perspective, it is nontrivial that we will have a section isquiv f -> qinv f.
+
+\func isequiv_to_qinv {A B : \Type} (f : A -> B) : isequiv f -> qinv f => \lam H =>
+    (H.1.1, H.1.2, g_o_f~id f H)
+
+\func \infix 9 ISO (A : \Type) (B : \Type) : \Type => \Sigma (f : A -> B) (isequiv f)
 
 -- we will later show that isequiv f is (-1)-truncation, so any two inhabitants are equal.
 
--- type equivalence is an equivalent relationL
+-- type equivalence is an equivalent relation.
 
 \func ISO_is_reflexive {A : \Type} : A ISO A => (id{A} , qinv_to_isequiv (id{A})  (id_is_qinv {A}))
 
--- to prove symmetric, we are going to assume that we
-\func ISO_is_symmetric {A B : \Type} (H : A ISO B) : B ISO A => {?}
+
+\func ISO_is_symmetric {A B : \Type} (alpha : A ISO B) : B ISO A =>
+ (alpha.2.1.1, qinv_to_isequiv alpha.2.1.1 (qinv_is_symmetric alpha.1 (isequiv_to_qinv alpha.1 alpha.2)))
+
+\func ISO_is_asso {A B C : \Type} (alpha : A ISO B) (beta : B ISO C) : A ISO C
+  => (beta.1 o alpha.1 ,
+      qinv_to_isequiv (beta.1 o alpha.1) (qinv_is_transitive (alpha.1)(beta.1)(isequiv_to_qinv alpha.1 alpha.2)(isequiv_to_qinv beta.1 beta.2)))
