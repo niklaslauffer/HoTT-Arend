@@ -156,3 +156,5 @@
 \func ISO_is_asso {A B C : \Type} (alpha : A ISO B) (beta : B ISO C) : A ISO C
   => (beta.1 o alpha.1 ,
       qinv_to_isequiv (beta.1 o alpha.1) (qinv_is_transitive (alpha.1)(beta.1)(isequiv_to_qinv alpha.1 alpha.2)(isequiv_to_qinv beta.1 beta.2)))
+
+
