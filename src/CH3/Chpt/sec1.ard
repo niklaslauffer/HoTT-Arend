@@ -1,0 +1,42 @@
+\import CH1.Def.def
+
+{- Chapter 3. Sets and Logic
+In type theory, there are ambiguities in the logical connectives such as "and" and "or". We will
+also explore what types does classical logic are under the Curry-Howard correspondence.
+ -}
+
+-- 3.1 Sets and n-Types
+
+{- in HoTT, types behave like infinity groupoids. It is useful to have a notion of set in type theory.
+Topologically they are discrete groupoids. Intuitively, a type is a set if there are no higher
+homomtopical information: any two paths with the same endpoints are the same (up to homotopy). It turns out
+we don't need to specify higher homotopies to be the same; they automatically are, because any map is
+automatically continuous.
+ -}
+
+\func isSet (A : \Type) : \Type => \Pi(x y : A) (p q : x = y) -> (p = q)
+
+-- Sets in HoTT are not like set sin ZF set theory, there is no membership predicate. Thhey are like
+-- sets in structural mathematics and category theory.
+
+-- we say that A is a set if we have an inhabitant of isSet. Note that apriori this depends on
+-- the inhabitant, we will later see that this choice "doesn't matter".
+
+-- Examples of sets:
+
+\func One_is_a_set : isSet One => {?}
+
+-- Zero is a set because you can do anything with Zero.
+
+\func Zero_is_a_set' (x : Zero) : \Pi (y : Zero) (p q : x = y) -> (p = q)
+
+\func Zero_is_a_set : isSet Zero => (\lam x y p q => Zero_is_a_set' x y p q)
+
+-- Natural numbers are also sets:
+
+\func Nat_is_a_set : isSet Nat => {?}
+
+-- product of sets are sets:
+
+\func Prod_of_sets_are_sets (A B : \Type) (alpha : isSet A) (beta : isSet B) : isSet A xx B =>
+  \lam (x y p q => )

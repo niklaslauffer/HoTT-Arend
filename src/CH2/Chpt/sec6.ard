@@ -1,9 +1,10 @@
 \import CH1.Def.def (xx)
-\import CH2.CH2_1
-\import CH2.CH2_2
-\import CH2.CH2_3
-\import CH2.CH2_4
-\import CH2.CH2_5
+\import CH2.Chpt.sec1
+\import CH2.Chpt.sec2
+\import CH2.Chpt.sec3
+\import CH2.Chpt.sec4
+\import CH2.Chpt.sec5
+\import CH2.Chpt.sec6
 
 -- 2.6 Cartesian Product Types
 
@@ -13,9 +14,9 @@ the canonical projection maps (x = y) -> (x.1 = y.1) xx (x.2 = y.2) is an equiva
 
 -- first we actually construct the canonical maps:
 
-\func pr1 {A B : \Type} : A xx B -> A => \lam x => x.1
+\func pr1 {A B : \Type} : \Sigma A  B -> A => \lam x => x.1
 
-\func pr2 {A B : \Type} : A xx B -> B => \lam x => x.2
+\func pr2 {A B : \Type} : \Sigma A  B -> B => \lam x => x.2
 
 \func pr1= {A B : \Type} {a b : A xx B} (p : a = b) : a.1 = b.1 => ap pr1 p
 
@@ -35,8 +36,8 @@ the canonical projection maps (x = y) -> (x.1 = y.1) xx (x.2 = y.2) is an equiva
 \func xx=unit' {A B : \Type} (x y : A xx B) (p : x = y) : (xx=inverse o xx=func) (p)= p \elim x,  p
   | (a_1, b_1), idp => idp
 
-\func xx=unit {A B : \Type} {x y : A xx B} :  (xx=inverse o xx=func) ~ {x = y} {\lam p => x = y} id => \lam p =>
-    xx=unit' x y p
+\func xx=unit {A B : \Type} {x y : A xx B} :  (xx=inverse o xx=func) ~ {x = y} {\lam p => x = y} id => (\lam p =>
+    xx=unit' x y p)
 
 -- now for the converse xx=func o xx=inverse ~ id:
 

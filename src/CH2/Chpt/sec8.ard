@@ -1,0 +1,11 @@
+\import CH1.Def.def
+\import CH2.Chpt.sec4
+
+-- 2.8 The unit type
+
+-- We will just quickly prove the equality type of elements of the unit type.
+
+\func x=yISOOne (x y : One) : ISO (x = y) One => {?}
+
+
+\func idk : One = One => idp

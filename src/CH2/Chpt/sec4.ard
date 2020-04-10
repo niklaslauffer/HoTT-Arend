@@ -15,6 +15,7 @@
 
 -- it is easy to show that ~ is a equivalence relation.
 
+
 \func ~_is_reflexive {A : \Type} {P : A -> \Type} (f : \Pi (x : A) -> P(x)) : f ~ {A} {P} f => \lam (x : A) => idp
 
 \func ~_is_symmetric {A : \Type} {P : A -> \Type} (f g : \Pi (x : A) -> P(x)) : f ~ {A} {P} g -> g ~{A} {P} f
@@ -33,7 +34,7 @@
 
 -- now we are going to prove a cute lemma:
 
-\func id {A : \Type} : A -> A => \lam x => x
+\func id {A : \Type} : A -> A => (\lam (x : A) => x)
 
 \func Cor2_4_4 {A : \Type} (f : A -> A) (H : f ~ {A}{\lam x => A} id) (x : A) : ap f (H(x)) = H(f x)
   => (((Help1 f H x ) * (Help2 f H x)) * (Help3 f H x)) * (Help4 f H x)
@@ -156,5 +157,6 @@
 \func ISO_is_asso {A B C : \Type} (alpha : A ISO B) (beta : B ISO C) : A ISO C
   => (beta.1 o alpha.1 ,
       qinv_to_isequiv (beta.1 o alpha.1) (qinv_is_transitive (alpha.1)(beta.1)(isequiv_to_qinv alpha.1 alpha.2)(isequiv_to_qinv beta.1 beta.2)))
+
 
 
