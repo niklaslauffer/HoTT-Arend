@@ -20,7 +20,7 @@
 \func pr_2 {A : \Type}{P : A -> \Type} (w : \Sigma (x : A) (P x)) : P (w.1) => w.2
 
 \func SigmaISO {A : \Type} {P : A -> \Type} (w w' : \Sigma (x : A) (P x)) :
-(w = w') ISO (\Sigma (p : pr_1{A}{P} w = pr_1{A}{P} w') (alpha : transport P p (pr_2{A}{P} w) = pr_2{A}{P} w'))
+ ISO (w = w')  (\Sigma (p : pr_1{A}{P} w = pr_1{A}{P} w') (alpha : transport P p (pr_2{A}{P} w) = pr_2{A}{P} w'))
   => (Sigma=func w w', Sigma=func_is_isequiv w w')
 
 \func Sigma=func' {A : \Type} {P : A -> \Type} (w w' : \Sigma (x : A) (P x)) (p~ : w = w') :
@@ -66,3 +66,19 @@
 
 \func Sigma=unit' {A : \Type} {P : A -> \Type} (w w' : \Sigma (x : A) (P x)) ( p~ : w = w') :
   ((Sigma=inv{A}{P} w w') o (Sigma=func{A}{P} w w')) p~ = p~ \elim w , p~ | (w_1, w_2), idp => idp
+
+\func pair=== => Sigma=inv
+
+-- I need to try to write smiliar to Frank's style:
+
+-- Corollary 2.7.3.
+\func Sigma_Prop_Uniq {A : \Type} {P : A -> \Type} (z : \Sigma (x : A) (P x)) : z = (pr_1{A}{P} z, pr_2{A}{P} z) =>
+  Sigma=inv {A}{P} z (pr_1{A}{P} z, pr_2{A}{P} z) (idp , idp)
+
+-- Theorem 2.7.4: Transport on Sigma types.
+
+\func Sigma_transport {A : \Type} {P : A -> \Type} {Q : (\Sigma (x : A) (P x)) -> \Type} (x y : A) (p : x = y) (pair : \Sigma (u : P x) (Q (x, u)))
+  : transport (\lam a => \Sigma (u : P a) (Q (a, u))) p pair = ((transport P p pair.1),
+       transport (Q) (Sigma=inv {A}{P}(x, pair.1) (y, transport P p pair.1) (p, idp)) pair.2)
+  \elim p | idp => idp
+

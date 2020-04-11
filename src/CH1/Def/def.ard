@@ -1,3 +1,5 @@
+\import CH2.Chpt.sec4
+
 -- we use a little o for composition
 
 \func \infixl 6 o {A B C : \Type}
@@ -127,8 +129,8 @@
 -- Standard equality definitions for types and functions (which is equal to
 -- propositional equality for types and functions via univalence and function extensionality.
 
-\func ISO (A : \Type) (B : \Type) : \Type =>
-  \Sigma (f : A -> B) (g : B -> A) (pA : \Pi(a : A) -> g (f a) = a) (pB : \Pi(b : B) -> f (g b) = b)
+\func \infix 9 ISO (A : \Type) (B : \Type) : \Type => \Sigma (f : A -> B) (isequiv f)
+
 
 \func sameFunc {A B : \Type}
                (f : A -> B) (g : A -> B) : \Type => \Pi (a : A) -> f(a) = g(a)
