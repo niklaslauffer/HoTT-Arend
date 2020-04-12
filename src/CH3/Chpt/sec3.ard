@@ -18,7 +18,7 @@
   \func helpfunc {P : \Type} (x : P) : One =>  star
   \func helper {P : \Type} (alpha : isProp P) (x : P) : isequiv (\lam p => star) => qinv_to_isequiv helpfunc (helper_quiv alpha x)
   \func helper_quiv {P : \Type} (alpha : isProp P) (x : P) : qinv (helpfunc {P}) => (\lam u => x, \lam u => (One=func_isequiv.helper1 star u star), \lam x' => alpha x x')
-}
+}sec
 
 -- Lemma 3.3.3: If two mere proposition are logically equivalent (they have maps back and forth), then they are in fact equivalent, aka homotopic:
 

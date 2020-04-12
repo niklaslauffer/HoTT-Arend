@@ -1,0 +1,13 @@
+\import CH1.Def.def
+\import CH3.Chpt.sec3
+
+-- 3.6 The Logic of Mere Propositions
+
+-- Note as before, if A and B are propositions, so is A xx B. If B is mere proposition, so is A -> B.
+-- On the other hand, coproduct A B is not necessarily mere proposition, it contains too much information. Same for
+-- Sigma types.
+
+\func xx_preserves_prop {A B : \Type} (alpha : isProp A) (beta : isProp B) : isProp (A xx B) => {?}
+
+\func maps_to_prop_is_prop {A B : \Type} (beta : isProp B) : isProp (A -> B) => {?}
+
