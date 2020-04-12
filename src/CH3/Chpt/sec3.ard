@@ -45,4 +45,9 @@
 
 -- Lemma 3.3.5: isProp(A) is a mere proposition
 
-\func Lemma_3_3_5 {P : \Type} : isProp (isProp P) => {?}
+\func Lemma_3_3_5 {P : \Type} : isProp (isProp P) => \lam alpha beta  =>  path (\lam i => \lam p q => (helper1 alpha beta p q) @ i) \where {
+  \func helper1{P : \Type} (alpha beta : isProp P) (p q : P) : (alpha p q) = (beta p q) => (Lemma_3_3_4 alpha) p q (alpha p q) (beta p q)
+}
+
+-- This implies that in a given universe U_i, all the propositions in the universe are in fact a subtype of the universe type,
+-- this means that there are no addition data for showing a type is a proposition.
