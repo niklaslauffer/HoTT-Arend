@@ -120,7 +120,7 @@
 
 -- Negation of a type
 
-\func neg (A : \Type) : \Type => A -> Zero
+\func Not (A : \Type) : \Type => A -> Zero
 
 -- standard refl function
 
@@ -134,3 +134,4 @@
 
 \func sameFunc {A B : \Type}
                (f : A -> B) (g : A -> B) : \Type => \Pi (a : A) -> f(a) = g(a)
+

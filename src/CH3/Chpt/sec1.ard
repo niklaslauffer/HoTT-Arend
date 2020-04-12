@@ -1,4 +1,9 @@
 \import CH1.Def.def
+\import CH2.Chpt.sec1
+\import CH2.Chpt.sec6
+\import CH2.Chpt.sec8
+\import CH2.Chpt.sec9
+\import CH2.Def.def
 
 {- Chapter 3. Sets and Logic
 In type theory, there are ambiguities in the logical connectives such as "and" and "or". We will
@@ -24,7 +29,7 @@ automatically continuous.
 
 -- Examples of sets:
 
-\func One_is_a_set : isSet One => {?}
+\func One_is_a_set : isSet One => \lam x y => {?}
 
 -- Zero is a set because you can do anything with Zero.
 
@@ -38,5 +43,33 @@ automatically continuous.
 
 -- product of sets are sets:
 
-\func Prod_of_sets_are_sets (A B : \Type) (alpha : isSet A) (beta : isSet B) : isSet A xx B =>
-  \lam (x y p q => )
+\func Prod_of_sets_are_sets' {A B : \Type} (alpha : isSet A) (beta : isSet B) (x y : A xx B) (p q : x = y) : p = q =>
+ (inv (xx=unit' x y p)) * (helper1 alpha beta x y p q) * (xx=unit' x y q) \where {
+  \func helper1 {A B : \Type} (alpha : isSet A)(beta : isSet B) (x y : A xx B) (p q : x = y) :
+  xx=inverse (xx=func p) = xx=inverse (xx=func q) => ap xx=inverse (helper2 alpha beta x y p q)
+  \func helper2 {A B : \Type} (alpha : isSet A)(beta : isSet B) (x y : A xx B) (p q : x = y) : (xx=func p) = (xx=func q)
+    => xx=inverse'(alpha x.1 y.1 (xx=func p).1 (xx=func q).1 ) (beta x.2 y.2 (xx=func p).2 (xx=func q).2)
+}
+
+
+
+
+
+\func Prod_of_sets_are_sets (A B : \Type) (alpha : isSet A) (beta : isSet B) : isSet (A xx B) =>
+  \lam x y p q => Prod_of_sets_are_sets' alpha beta x y p q
+
+\func Maps_to_sets_are_sets (A : \Type) (B : A -> \Type) (alpha : \Pi (x : A) -> (isSet (B x))) : isSet (\Pi (x : A) -> (B x)) =>
+ \lam f g p q => helper1 A B alpha f g p q \where {
+  \func helper1 (A : \Type) (B : A -> \Type) (alpha : \Pi (x : A) -> (isSet (B x))) (f g : \Pi (x : A) -> (B x)) (p q : f = g)
+    : p = q => {?}
+}
+
+-- Define 1-Type:
+
+\func One_Type (A : \Type) : \Type => \Pi (x y : A) (p q : x = y)(r s : p = q) -> r = s
+
+\func Sets_are_One_Type (A : \Type) (alpha : isSet A) : One_Type A => \lam x y p q r s => {?}
+
+-- we will prove that N-1 Types are N types later.
+
+-- Note, the Universe type (assume univalence), is not a set. In fact, it is not a n-type for any n.
