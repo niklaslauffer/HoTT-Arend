@@ -7,10 +7,11 @@
 \func happly {A : \Type} {B : A -> \Type} {f g : \Pi (x : A) -> B x} (p : f = g): \Pi (x : A) -> (f x = g x) =>
   \lam x => path (\lam i => (p @ i) x)
 
--- "Axiom" 2.9.3 (function extensionality)
+-- "Axiom" 2.9.3 (function extensionality): we proof it from the existence of interval type, which is an higher inductive type.
 
 \func funext {A : \Type} {B : A -> \Type} {f g : \Pi (x : A) -> B x} (p : \Pi (x : A) -> (f x = g x)): f = g =>
   path (\lam i => \lam a => p a @ i)
 
 \func pi_eq_uniq {A : \Type} {B : A -> \Type} (f g : \Pi (x : A) -> B x) : isequiv (happly {A} {B} {f} {g}) =>
   qinv_to_isequiv (happly {A} {B}) (\lam p => funext {A} {B} p, \lam p => idp, \lam p => idp)
+
