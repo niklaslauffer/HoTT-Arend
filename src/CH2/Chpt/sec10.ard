@@ -1,0 +1,13 @@
+\import CH2.Chpt.sec4
+
+-- 2.10 Universes and Univalence axiom
+
+\func idtoeqv {A B : \Type} (p : A = B) : A ISO B
+  \elim p | idp => ISO_is_reflexive
+
+-- we are going to just assume univalence right now.
+
+\func Univalence_Axiom {A B : \Type} : isequiv (\lam (p : A = B) => idtoeqv p) => {?}
+
+\func ua {A B : \Type} : A ISO B -> A = B => (Univalence_Axiom{A}{B}).1.1
+
