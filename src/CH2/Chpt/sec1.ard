@@ -1,4 +1,5 @@
 \import CH1.Def.def
+\import CH2.Thms.paths
 
 -- Chapter 2. Homotopy Type Theory
 -- in this chapter we are goinig to see what kind of structures do the identity types have, given its inductor.
@@ -9,16 +10,11 @@
 -- as function extensionality, can be derived from the existence of the interval type, but following the book,
 -- we are going to explore the structures of identity type from the inductor.
 
--- we recall the definition of inductor of the identity type:
+-- we recall the important part of the definition of the inductor of the identity type:
 
-\func indPath {A : \Type} (C : \Pi (x y : A) -> (x = y) -> \Type) (c : \Pi(x : A) -> (C x x (refl(A)(x)))) (x y : A) (p : x = y) : C(x)(y)(p)
+\func indPath {A : \Type} (C : \Pi (x y : A) -> (x = y) -> \Type) (c : \Pi(x : A) -> (C x x idp)) (x y : A) (p : x = y) : C x y p
 \elim p
   | idp  => c(x)
-
-
-
--- idp is how we denote the reflexivity element of x = x.
-
 
 -- 2.1 Types of higher groupoids
 
@@ -31,27 +27,20 @@
   | x, idp => idp
 
 
--- transitivity of equality, or that path concatenates, again we have idp * idp :== idp:
-
-\func \infix 3 * {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z) \elim p, q
-  | idp, idp => idp
+-- transitivity of equality, or that path concatenates, again we have idp c idp :== idp:
+-- c stands for path concatenation
+\func \infix 7 c {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z) =>
+  tran p q
 
 -- note that we did a double induction. In truth, I could have just used identity map for helper,
 -- but in order to keep the concatenation symmetric on the paths, I used the path induction on the helper.
 
--- I don't know how to do it via inductor.
-\func \infix 3 ab {A : \Type} (x y z : A) : (x = y) -> (y = z) -> (x = z)
-  => \lam p q => indPath {A} (\lam x y p => (y = z) -> (x = z))
-                         (\lam x q => q) x y p q
--- indPath(\lam x z q => x = z) (\lam x => idp) x z q) x y p z q
-
-
 -- now we can show some trivial relations of inverse path, concatenation...
 
-\func idp_left_unit {A : \Type} {x y : A} {p : x = y} : p = p * idp \elim y, p
+\func idp_left_unit {A : \Type} {x y : A} {p : x = y} : p = p c idp \elim y, p
   | x, idp => idp
 
-\func idp_right_unit {A : \Type} {x y : A} {p : x = y} : p = idp * p \elim y , p
+\func idp_right_unit {A : \Type} {x y : A} {p : x = y} : p = idp c p \elim y , p
   | x, idp => idp
 
 -- this shows that reflexivity idp is the unit object with respect to concatenation.
@@ -71,7 +60,7 @@
 
 -- lastly, we are going to show that concatenation is "homotopically" associative:
 
-\func *_assoc {A : \Type} {x y z w : A} (p : x = y) (q : y = z) (r : z = w) :
+\func c_assoc {A : \Type} {x y z w : A} (p : x = y) (q : y = z) (r : z = w) :
   p * (q * r) = (p * q) * r \elim p , q , r
   | idp, idp, idp => idp
 

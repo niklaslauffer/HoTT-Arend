@@ -17,10 +17,10 @@
 
 \func - {A : \Type} {x y : A} (p : x = y) => symm p
 
-\func reflrefl {A : \Type} (x : A) : refl A x = refl A x => refl(x = x)(refl A x)
+\func reflrefl {A : \Type} (x : A) : idp = idp => idp {x = x} {idp}
 
 \func ap {A B : \Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y
-  => indPath{A}(\lam x y p => f x = f y)(\lam x => refl(B)(f x)) x y p
+  => indPath{A}(\lam x y p => f x = f y)(\lam x => idp{B}{f x}) x y p
 
 \func transport {A : \Type} (B : A -> \Type) {a a' : A} (p : a = a') : B a -> B a'
   => indPath(\lam x y => \lam p => B x -> B y)(\lam x => \lam (y : B x) => y) a a' p
