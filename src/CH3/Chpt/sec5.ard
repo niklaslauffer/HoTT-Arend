@@ -1,0 +1,34 @@
+\import CH2.Chpt.sec3 (transport)
+\import CH2.Chpt.sec7
+\import CH3.Chpt.sec3
+
+-- 3.5 Subsets and Propositional Resizing
+
+{- We think about { x \in A | P (x)} where P is proposition as a subset of A
+In HoTT, P is a mere proposition and above is the Sigma type.
+ -}
+
+-- Lemma 3.5.1 Subtypes behave like subtypes:
+
+\func Lemma_3_5_1 {A : \Type} (P : A -> \Type) (alpha : \Pi (x : A) -> isProp (P x)) (u v : \Sigma (x : A) (P x))
+  (p : u.1 = v.1) : u = v => Sigma=inv' u v p (alpha v.1 (transport (P) p u.2) v.2)
+
+-- For example, A ISO B is a subtype of A -> B, as isequiv f is a mere proposition.
+
+\func SubType {A : \Type} (P : A -> \Type) => \Sigma (x : A) (P x)
+
+-- a \in {x \in A |P x } if P(a) holds. We call "a" a member of P.
+
+-- \func Prop_i => \Sigma (A : \Type_i) (isProp A)
+-- \func Propositional_Resizing : isequiv ( Prop_i -> Prop_{i+1})
+
+{- Propositional resizing is equivalent to say that we have a subobject classifier, which is Prop_0,
+and it is irrelevant of the size of the universe
+ -}
+\func Prop => \Sigma (A : \Type) (isProp A)
+-- Power sets are exactly maps to the subobject classifer:
+
+\func Power_set (A : \Type) => A -> Prop
+
+-- this is independent of A, assuming propositional resizing. Note A -> Bool is the subtype of decidable subsets.
+

@@ -1,0 +1,29 @@
+\import CH2.Chpt.sec1
+\import CH2.Chpt.sec10
+\import CH2.Chpt.sec2
+\import CH2.Chpt.sec3
+\import CH2.Chpt.sec4
+\import CH2.Chpt.sec6
+
+-- Chapter 4. Equivalences.
+
+{- We are going to delve more into how isequiv is defined. We are actually going to have three different
+definitions, they will all be equivalent. First we will discuss why Quasi-inverse is not a proposition
+ -}
+
+
+-- 4.1 Quasi-inverses
+
+-- Lemma 4.1.1 f : A -> B, then qinv f is homotopic to \Pi (x : A) (x = x).
+
+\func Lemma_4_1_1 {A B : \Type} (f : A -> B) (alpha : qinv f) : (qinv f) ISO (\Pi (x : A) -> (x = x)) =>
+  ISO_is_asso (idtoeqv (helper1 {A}{B} f (qinv_to_isequiv f alpha)))  (Lemma_4_1_1' (ua (f, qinv_to_isequiv f alpha))) \where {
+
+  \func helper1 {A B : \Type} (f : A -> B) (alpha : isequiv f) : (qinv f)  = qinv (idtoeqv (ua((f, alpha)))).1
+    => inv (ap (\lam x => qinv x) (ap (pr_1{A -> B}{\lam x => isequiv x}) ((Univalence_Axiom{A}{B}).1.2 (f, alpha))))
+  \func Lemma_4_1_1' {A B : \Type} (p : A = B) : qinv (idtoeqv p).1 ISO (\Pi (x : A) -> (x = x))
+    \elim p | idp => {?}
+
+
+
+}

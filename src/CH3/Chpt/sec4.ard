@@ -1,0 +1,25 @@
+\import CH1.Def.def
+\import CH3.Chpt.sec3
+
+-- 3.4 Classical vs. intuitionistic logic
+
+-- we can now assume law of excluded the middle, but only on mere propositions:
+
+\func LEM : \Pi (A : \Type) -> (isProp A -> (coproduct A (Not A))) => {?}
+
+-- Also the law of double negation:
+
+\func LDN : \Pi (A : \Type) -> (isProp A -> (Not (Not A) -> A)) => {?}
+
+{- this avoids the paradoxes of Theorem 3.2.2.
+It can be added on as an axiom to our type theory, but it is highly non-computable.
+
+In constructive mathematics, law of excluded the middle can hold for some propositions, these are called decidable
+ -}
+
+\func isDecidable (A : \Type) : \Type => coproduct A (Not A)
+\func P_Decidable {A : \Type} (B : A -> \Type) : \Type => \Pi (a : A) -> (coproduct (B a) (Not (B a)))
+\func is_Dec= (A : \Type) : \Type => \Pi (a b : A) -> (coproduct (a = b) (Not (a = b)))
+-- LEM says that all mere propositions are deciadble, so are all families of mere propositions. It implies all
+-- sets have decidable equality. In fact, having decidbale equality implies that it is a set.
+

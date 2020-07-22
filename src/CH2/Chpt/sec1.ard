@@ -27,10 +27,10 @@
   | x, idp => idp
 
 
--- transitivity of equality, or that path concatenates, again we have idp c idp :== idp:
--- c stands for path concatenation
-\func \infix 7 c {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z) =>
-  tran p q
+-- transitivity of equality, or that path concatenates, again we have idp * idp :== idp:
+
+\func \infixl 3 * {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z) \elim p, q
+  | idp, idp => idp
 
 -- note that we did a double induction. In truth, I could have just used identity map for helper,
 -- but in order to keep the concatenation symmetric on the paths, I used the path induction on the helper.
@@ -97,6 +97,8 @@ p * (q * (r * s)) to (p * q) * r) * s, and one can ask how these two equalities 
 
 \func rightstar {A : \Type} {a b c : A} (q : a = b) {r s : b = c} (beta : r = s) : q * r = q * s \elim q
   | idp => ((inv (idp_right_unit)) * beta) * idp_right_unit
+
+\func rightstar* {A : \Type} {a b c : A} (q : a = b) (r s : b = c) (beta : r = s) : q * r = q * s =>  rightstar {A}{a}{b}{c} q {r}{s} beta
 
 -- \func star {A : \Type} {a b c : A} (p q : a = b) (r s : b = c) (alpha : p = q) (beta : r = s) : p * r = q * s
 --  => (leftstar r alpha) * (rightstar q beta)

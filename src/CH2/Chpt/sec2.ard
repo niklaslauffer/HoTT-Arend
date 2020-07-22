@@ -31,3 +31,5 @@ to paths, and higher paths to higher paths. Topologically, we see that all funct
 
 -- note that these rule themselves have higher coherence laws.
 
+\func id_func_is_id {A : \Type} {x y : A} (p : x = y) : ap (\lam x => x) (p) = p \elim p | idp => idp
+

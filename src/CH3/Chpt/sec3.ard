@@ -1,0 +1,53 @@
+\import CH1.Def.def
+\import CH2.Chpt.sec1 (*, inv, rightstar*)
+\import CH2.Chpt.sec3 (apd, transport)
+\import CH2.Chpt.sec4
+\import CH2.Chpt.sec8
+\import CH3.Chpt.sec1
+
+-- 3.3 Mere Propositions
+
+\func isProp (P : \Type) : \Type => \Pi (x y : P) -> (x = y)
+
+-- this is our notion of Proposition, they are also called mere propositions, as well as (-1)-truncated types.
+
+-- Lemma 3.3.2 :If a proposition P has an inhabitant, then it is the true type One.
+
+\func Lemma_3_3_2 (P : \Type) (alpha : isProp P) (x : P) : P ISO One => (helpfunc, helper alpha x) \where
+  {
+  \func helpfunc {P : \Type} (x : P) : One =>  star
+  \func helper {P : \Type} (alpha : isProp P) (x : P) : isequiv (\lam p => star) => qinv_to_isequiv helpfunc (helper_quiv alpha x)
+  \func helper_quiv {P : \Type} (alpha : isProp P) (x : P) : qinv (helpfunc {P}) => (\lam u => x, \lam u => (One=func_isequiv.helper1 star u star), \lam x' => alpha x x')
+}sec
+
+-- Lemma 3.3.3: If two mere proposition are logically equivalent (they have maps back and forth), then they are in fact equivalent, aka homotopic:
+
+\func Lemma_3_3_3 {P Q : \Type} (alpha : isProp P) (beta : isProp Q) (f : P -> Q) (g : Q -> P) : P ISO Q =>
+  (\lam p => f p , qinv_to_isequiv (\lam p => f p) (\lam q => g q, \lam q => beta (f (g q)) q, \lam p => alpha (g (f p)) p))
+
+-- Lemma 3.3.4: Every Mere Propositions is a set:
+
+\func Lemma_3_3_4 {P : \Type} : isProp P -> isSet P => \lam alpha x y p q => (help1 alpha x x y p) * (inv (help1 alpha x x y q)) \where {
+  \func beta {P : \Type} (alpha : isProp P) (x : P) : \Pi (y : P) -> (x = y) => \lam y => alpha x y
+  \func help1 {P : \Type} (alpha : isProp P) (x y z : P) (p : y = z) : p = (inv (beta alpha x y)) * (beta alpha x z) =>
+    (help1_1 (beta alpha x y) p) * (rightstar* (inv (beta alpha x y)) ((beta alpha x y) * p) (beta alpha x z) (help2 alpha x y z p))
+  \func help1_1 {A : \Type} {x y z : A} (p : x = y) (q : y = z) :  q = (inv p) * (p * q) \elim p, q | idp, idp => idp
+  \func help2 {P : \Type} (alpha : isProp P) (x y z : P) (p : y = z) : (beta alpha x y) * p = (beta alpha x z) => (help2_2 alpha x y z p) * (apd{P}{\lam w => x = w} (\lam w => beta alpha x w) (p))
+  \func help2_1  {P : \Type} (alpha : isProp P) (x y z : P) (p : y = z) : (beta alpha x y) * p = transport (\lam w => (x = w)) p (beta alpha x y) => (help2_2 alpha x y z p)
+
+
+  \func help2_1_2 {P : \Type} (alpha : isProp P) (x y z : P) (p : y = z) : (transport (\lam w => (x = w)) p (alpha x y)) = (beta alpha x z) => (apd{P}{\lam w => x = w} (\lam w => beta alpha x w ) (p))
+
+
+  \func help2_2 {P : \Type} (alpha : isProp P) (x y z : P) (p : y = z) :
+    (beta alpha x y) * p = transport (\lam w => (x = w)) p (beta alpha x y) => {?} -- note that this is in lemma 2.11.
+}
+
+-- Lemma 3.3.5: isProp(A) is a mere proposition
+
+\func Lemma_3_3_5 {P : \Type} : isProp (isProp P) => \lam alpha beta  =>  path (\lam i => \lam p q => (helper1 alpha beta p q) @ i) \where {
+  \func helper1{P : \Type} (alpha beta : isProp P) (p q : P) : (alpha p q) = (beta p q) => (Lemma_3_3_4 alpha) p q (alpha p q) (beta p q)
+}
+
+-- This implies that in a given universe U_i, all the propositions in the universe are in fact a subtype of the universe type,
+-- this means that there are no addition data for showing a type is a proposition.

@@ -1,0 +1,38 @@
+\import CH1.Def.def
+
+-- 3.2 Propositions are types?
+
+-- Types in type theory behave like propositions in intuitionistic logic. Not all types looks like types in classical logic,
+-- more explicitly, if we impose the law of excluded middle (or equivalently, the law of double negation) for all types,
+-- then we will run into trouble:
+
+-- The law of double negation:
+
+-- \func LDN : \Pi (A : \Type) -> (Not (Not A) -> A) => {?}
+
+-- the law of excluded the middle:
+
+-- \func LEM : \Pi (A : \Type) -> (coproduct A (Not A)) => {?}
+
+-- LEM implies LDN:
+
+\func LEM_to_LDN' (A : \Type) (b : coproduct A (Not A)) : (Not (Not A) -> A) \elim b
+  | inl a => \lam p => a
+  | inr b => \lam p => helper (p b) \where {
+     \func helper {A : \Type} (ab : Zero) : A
+}
+
+\func LEM_to_LDN (A : \Type) : (coproduct A (Not A)) -> (Not (Not A) -> A) => \lam b => LEM_to_LDN' A b
+
+-- Theorem 3.2.2 says that Assuming the law of double negation for all types gives contradiction:
+
+
+\func LDN_Contradiction : (\Pi (A : \Type) -> (Not (Not A) -> A)) -> Zero => {?}
+
+-- Corollary 3.2.7, assuming Law of excluded middle thus also leads to contradiction:
+
+\func LEM_Contradiction : (\Pi (A : \Type) -> (coproduct A (Not A))) -> Zero => \lam LEM => LDN_Contradiction (\lam A => LEM_to_LDN A (LEM A))
+
+-- This if we want to assume univalence axiom, and still have classical reasoning (aka the law of excluded middle), then
+-- not all types can be assume to be classical propositions. They hold too much homotopic information.
+
