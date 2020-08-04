@@ -1,0 +1,25 @@
+-- The dependent type of functions looks like:
+
+\func dependentType (A : \Type) (B : A -> \Type) : \Type => \Pi(a : A) -> B a
+
+-- This is the formal definition of A -> B, note that A B : \Type instantiates both A and B as separate members of that type.
+
+\func functionType (A B : \Type) : \Type => \Pi(a : A) -> B
+
+-- The identity funciton is
+
+\func idS : \Pi (A : \Type) -> A -> A => \lam A a => a
+
+-- The swap funciton
+
+\func swap : \Pi (A B C : \Type) -> (A -> B -> C) -> (B -> A -> C) => \lam A B C f => \lam b a => f a b
+
+-- We note how complex it is to define it this way in Arend moving arguments before the parenthesis allows us to drop the pi
+
+\func simpleSwap (A B C : \Type) (g : A -> B -> C) : B -> A -> C => \lam b a => g a b
+
+-- Thus we can see that these expressions are equivalent and indeed later on we can prove that this semantic difference in arend is purely semantic.
+
+-- We redefine it here with some clearer language with an implicit argument, A, so that it can be infered by the context.
+
+\func id {A : \Type} (a : A) : A => a

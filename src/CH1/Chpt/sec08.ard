@@ -1,0 +1,8 @@
+\import CH1.Chpt.sec07
+
+-- We import the information about the Two type
+
+\func uniqTwo (C : Two -> \Type) (x : Two) : (x = Two.zero) ++ (x = Two.one) =>
+  indTwo (\lam x => (x = Two.zero) ++ (x = Two.one)) (in0 idp) (in1 idp) x
+
+\func decidableSubsets {A : \Type} : \Type => A -> Two

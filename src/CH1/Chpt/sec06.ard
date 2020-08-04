@@ -1,0 +1,51 @@
+-- In the last section we saw a definiton for the product time and we realized that it worked like we expected
+-- The general Dependent Pair type is \Sigma and what we will define more clearly here:
+
+
+{-
+  We will now run through the rules for introducing a type
+  0) Formation Rule
+  1) Construction Rules
+  2) Type eliminators
+  3) Computation Rules
+ -}
+
+-- 0)
+
+\func dependentPair {A : \Type} {B : A -> \Type} : \Type => \Sigma (x : A) (B x)
+
+-- Personally I prefer infix notation but it's fine
+
+\func \infix 6 && (A : \Type) (B : A -> \Type) : \Type => \Sigma (x : A) (B x)
+
+-- 1)
+
+\func ex&& {A : \Type} {B : A -> \Type} (a : A) (b : B a) : A && B => (a, b)
+
+-- 2)
+-- 3)
+-- Recursor
+
+\func rec&& {A : \Type} {B : A -> \Type} (C : \Type) (g : \Pi(a : A) -> B a -> C) (x : A && B) : C \elim x
+  | (a,b) => g a b
+  | _ => {?}
+
+-- Inductor
+
+\func ind&& {A : \Type} {B : A -> \Type} (C : A && B -> \Type) (g : \Pi(a : A) (b : B a) -> C (a,b)) (p : A && B) : C p \elim p
+  | (a,b) => g a b
+  | _ => {?}
+
+-- From this we can agin find useful projections
+
+\func pr0 {A : \Type} {B : A -> \Type} (x : A && B) : A => rec&& {A} {B} A (\lam a _ => a) x
+
+\func pr1 {A : \Type} {B : A -> \Type} (x : A && B) : B (pr0 {A} {B} x) =>
+  ind&& {A} {B} (\lam x => B (pr0 {A} {B} x)) (\lam _ b => b) x
+
+\func ac {A B : \Type} {R : A -> B -> \Type} : (\Pi (x : A) -> \Sigma (y : B) (R x y)) -> (\Sigma (f : A -> B) (\Pi(x : A) -> R x (f x)))
+  => \lam g => (\lam x => (g x).1 , \lam x => (g x).2)
+
+\func Magma : \Type => \Sigma (A : \Type) (A -> A -> A)
+
+\func PointedMagma : \Type => \Sigma (A : \Type) (A -> A -> A) A

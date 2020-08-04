@@ -1,0 +1,58 @@
+-- Before we intoroduce the coproduct type let us talk about the two type:
+-- 0)
+
+\data Two | zero | one
+
+\func recTwo (C : \Type) (c0 c1 : C) (t : Two) : C \elim t
+  | zero => c0
+  | one => c1
+  | _ => {?}
+
+\func indTwo (C : Two -> \Type) (c0 : C zero) (c1 : C one) (t : Two) : C t \elim t
+  | zero => c0
+  | one => c1
+  | _ => {?}
+
+-- The general coproduct type:
+{-
+  We will now run through the rules for introducing a type
+  0) Formation Rule
+  1) Construction Rules
+  2) Type eliminators
+  3) Computation Rules
+ -}
+-- 0)
+
+\func \infix 6 ++ (A : \Type) (B : \Type) : \Type => \Sigma (x : Two) (recTwo \Type A B x)
+
+-- 1)
+
+\func ex++A {A B : \Type} (a : A) : A ++ B => (Two.zero, a)
+
+\func ex++B {A B : \Type} (b : B) : A ++ B => (Two.one, b)
+
+-- 2)
+-- 3)
+-- First we must define the coproduct
+
+\func in0 {A B : \Type} (a : A) : A ++ B => (Two.zero, a)
+
+\func in1 {A B : \Type} (b : B) : A ++ B => (Two.one, b)
+
+\func recA++B {A B : \Type} (C : \Type) (g0 : A -> C) (g1 : B -> C) (x : A ++ B) : C \elim x
+  | (Two.zero, a) => g0 a
+  | (Two.one, b) => g1 b
+  | _ => {?}
+
+\func indA++B {A B : \Type} (C : (A ++ B) -> \Type) (g0 : \Pi(a : A) -> C (in0 a)) (g1 : \Pi (b : B) -> C (in1 b)) (x : A ++ B) : C x \elim x
+  | (Two.zero, a) => g0 a
+  | (Two.one, b) => g1 b
+  | _ => {?}
+
+-- The nullary type on this is Zero which is given like:
+
+\data Zero
+
+\func recZero (C : \Type) (z : Zero) : C
+
+\func indZero (C : Zero -> \Type) (z : Zero) : C z

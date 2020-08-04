@@ -1,0 +1,49 @@
+\import CH1.Chpt.sec04
+
+-- we will use Arend has a built in natural type defined like so:
+
+\data Nat
+  | zero
+  | succ Nat
+
+-- We will introduce it formally later on
+
+-- We are using pattern matching in order to define this with primative recursion
+
+\func double (n : Nat) : Nat \elim n
+  | Nat.zero => Nat.zero
+  | Nat.succ n => Nat.succ (Nat.succ (double n))
+
+\func add (n0 n1 : Nat) : Nat \elim n0, n1
+  | Nat.zero, n => n
+  | Nat.succ n0, n1 => Nat.succ (add n0 n1)
+
+-- The implicitly use the recursor but to really capture this let us define the recursor
+-- 2), 3)
+
+\func recN (C : \Type) (c0 : C) (cs : Nat -> C -> C) (n : Nat) : C \elim n
+  | Nat.zero => c0
+  | Nat.succ n => cs n (recN C c0 cs n)
+  | _ => {?}
+
+\func indN (C : Nat -> \Type) (c0 : C Nat.zero) (cs : \Pi (n : Nat) -> C n -> C (Nat.succ n)) (n : Nat) : C n \elim n
+  | Nat.zero => c0
+  | Nat.succ n => cs n (indN C c0 cs n)
+  | _ => {?}
+
+\func doubleRec (n : Nat) : Nat => recN Nat Nat.zero (\lam _ y => Nat.succ (Nat.succ y)) n
+
+\func addRec (n0 n1 : Nat) : Nat => recN (Nat -> Nat) id (\lam _ g m => Nat.succ (g m)) n0 n1
+
+\func assoc (i j k : Nat) : add i (add j k) = add (add i j) k =>
+  indN (\lam i => \Pi (j k : Nat) -> add i (add j k) = add (add i j) k) (assoc_0) (assoc_s) i j k \where
+{
+  \func assoc_0 => \lam j k => idp {Nat} {add j k}
+
+  -- This will be proved in later chapters
+
+  \func ap_succ {m n : Nat} : (m = n) -> (succ m = succ n) => {?}
+
+  \func assoc_s (i : Nat) (h : \Pi(j k : Nat) -> add i (add j k) = add (add i j) k) (j k : Nat) :
+    add (Nat.succ i) (add j k) = add (add (Nat.succ i) j) k => ap_succ(h j k)
+}

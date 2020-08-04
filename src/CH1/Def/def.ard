@@ -1,5 +1,3 @@
-\import CH2.Chpt.sec4
-
 -- we use a little o for composition
 
 \func \infixl 6 o {A B C : \Type}
@@ -9,6 +7,8 @@
 
 \func \infixl 6 u {A B C : \Type}
                   (f : A -> B) (g : B -> C) : A -> C => g o f
+
+\func id {A : \Type} (a : A) : A => a
 
 -- definitions for the simple product type
 
@@ -55,26 +55,6 @@
 \func pr2&& {A : \Type} {B : A -> \Type}
             (x : A && B) : B(pr1&&{A}{B} x) => indA&&B{A}{B} (\lam y => B(pr1&&{A}{B} y)) (\lam a b => b)(x)
 
--- Coproduct Type
-
-\data coproduct (A B : \Type)
-  | inl A
-  | inr B
-
-\func \infix 5 ++ (A B : \Type) : \Type => coproduct A B
-
-\func recA++B {A B : \Type}
-              (C : \Type) (g0 : A -> C) (g1 : B -> C) (x : A ++ B) : C \elim x
-  | inl a => g0 a
-  | inr b => g1 b
-  | _ => {?}
-
-\func indA++B {A B : \Type}
-              (C : A ++ B -> \Type) (g0 : \Pi(a : A) -> C(inl a)) (g1 : \Pi(b : B) -> C(inr b)) (x : A ++ B) : C x \elim x
-  | inl a => g0 a
-  | inr b => g1 b
-  | _ => {?}
-
 -- basic types
 
 \data Zero
@@ -111,7 +91,31 @@
   | one => c1
   | _ => {?}
 
--- Note that idp is used when reflexive is needed in pattern matching, because I can't view the standard library
+-- Coproduct Type
+
+\data coproduct (A B : \Type)
+  | inl A
+  | inr B
+
+\func \infix 5 ++ (A B : \Type) : \Type => coproduct A B
+
+\func recA++B {A B : \Type}
+              (C : \Type) (g0 : A -> C) (g1 : B -> C) (x : A ++ B) : C \elim x
+  | inl a => g0 a
+  | inr b => g1 b
+  | _ => {?}
+
+\func indA++B {A B : \Type}
+              (C : A ++ B -> \Type) (g0 : \Pi(a : A) -> C(inl a)) (g1 : \Pi(b : B) -> C(inr b)) (x : A ++ B) : C x \elim x
+  | inl a => g0 a
+  | inr b => g1 b
+  | _ => {?}
+
+-- standard refl function
+
+-- \func refl (A : \Type) (a : A) : a = a => path(\lam _ => a)
+
+-- idp is the version that works for pattern matching but is defined in the same way
 
 \func indPath {A : \Type} (C : \Pi (x y : A) -> (x = y) -> \Type) (c : \Pi(x : A) -> C x x idp) (x y : A) (p : x = y) : C x y p
 \elim y, p
@@ -132,18 +136,14 @@
 
 \func Not (A : \Type) : \Type => A -> Zero
 
--- standard refl function
+-- This is a naive notion of an isomorphism
 
--- \func refl (A : \Type) (a : A) : a = a => path(\lam _ => a)
-
--- idp is the version that works for pattern matching
-
--- Standard equality definitions for types and functions (which is equal to
--- propositional equality for types and functions via univalence and function extensionality.
-
-\func \infix 9 ISO (A : \Type) (B : \Type) : \Type => \Sigma (f : A -> B) (isequiv f)
-
+\func \infix 9 ISO (A B : \Type) : \Type =>
+  \Sigma (f : A -> B) (g : B -> A) (\Pi (x : A) -> (g o f) x = x) (\Pi (x : B) -> (f o g) x = x)
 
 \func sameFunc {A B : \Type}
                (f : A -> B) (g : A -> B) : \Type => \Pi (a : A) -> f(a) = g(a)
 
+\func Magma : \Type => \Sigma (A : \Type) (A -> A -> A)
+
+\func PointedMagma : \Type => \Sigma (A : \Type) (A -> A -> A) A
