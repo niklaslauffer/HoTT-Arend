@@ -2,20 +2,24 @@
 -- Note the comments tell us what things we need to specify to define a type
 
 -- 0) The formation rule: This requires the sigma type but we can think of it like something with some ordered pairs from A,B
+
 \func \infix 6 xx (A B : \Type) : \Type => \Sigma A B
 
 -- 1) The construction rules: The formation rule gives rise to this kind of thing.
 -- a : A, b : B, (a,b) : A xx B.
 -- Let's try it!
+
 \func exAxxB (A B : \Type) (a : A) (b : B) : A xx B => (a,b)
 
 -- 2) The type eliminators: recursor, inductor
 -- 3) Computation rule of the eliminators
 --  \elim tells us that we want to break down z into cases
+
 \func recAxxB {A B : \Type}
               (C : \Type) (g : A -> B -> C) (z : A xx B) : C \elim z
   | (a,b) => g(a)(b)
   | _ => {?}
+
 -- notice the use of the {?} as it says we only understand this for elements that look like (a,b)
 
 \func indAxxB {A B : \Type}
@@ -24,13 +28,17 @@
   |  _ => {?}
 
 -- We can now define the projection operations
+
 \func pr0_xx {A B : \Type} (x : A xx B) : A => recAxxB A (\lam a _ => a) x
+
 \func pr1_xx {A B : \Type} (x : A xx B) : B => recAxxB B (\lam _ b => b) x
 
 -- The nullary type on the product elements is
+
 \data One | star
 
 -- Intuitively we have that recAxxB {One} {One} is the recursor of one that we can summarize like:
+
 \func recOne (C : \Type) (c : C) (star : One) : C \elim star
   | star => c
   | _ => {?}
@@ -40,9 +48,10 @@
   | _ => {?}
 
 -- For our purposes reflexivity is defined as idp there is an explanation in the definitions section
-\func uniqOne (x : One) : x = One.star
-  => indOne (\lam y => y = One.star) idp x
+
+\func uniqOne (x : One) : x = One.star => indOne (\lam y => y = One.star) idp x
 
 -- Using the similar argument we can prove the uniq of AxxB
-\func uniqAxxB {A B : \Type} (x : A xx B) : (pr0_xx x, pr1_xx x) = x
-  => indAxxB(\lam x => (pr0_xx x, pr1_xx x) = x) (\lam a b => idp {A xx B} {(a, b)}) x
+
+\func uniqAxxB {A B : \Type} (x : A xx B) : (pr0_xx x, pr1_xx x) = x =>
+  indAxxB(\lam x => (pr0_xx x, pr1_xx x) = x) (\lam a b => idp {A xx B} {(a, b)}) x

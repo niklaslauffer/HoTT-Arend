@@ -43,8 +43,8 @@
 \func pr1 {A : \Type} {B : A -> \Type} (x : A && B) : B (pr0 {A} {B} x) =>
   ind&& {A} {B} (\lam x => B (pr0 {A} {B} x)) (\lam _ b => b) x
 
-\func ac {A B : \Type} {R : A -> B -> \Type} : (\Pi (x : A) -> \Sigma (y : B) (R x y)) -> (\Sigma (f : A -> B) (\Pi(x : A) -> R x (f x)))
-  => \lam g => (\lam x => (g x).1 , \lam x => (g x).2)
+\func ac {A B : \Type} {R : A -> B -> \Type} : (\Pi (x : A) -> \Sigma (y : B) (R x y)) -> (\Sigma (f : A -> B) (\Pi(x : A) -> R x (f x))) =>
+  \lam g => (\lam x => (g x).1 , \lam x => (g x).2)
 
 \func Magma : \Type => \Sigma (A : \Type) (A -> A -> A)
 

@@ -10,6 +10,7 @@
   (\Pi (a : A) -> P a) xx (\Pi (a : A) -> Q a) => (\lam a => pr0_xx (x a), \lam a => pr1_xx (x a))
 
 \import CH1.Chpt.sec09
+
 \func leq (n m : Nat) : \Type => \Sigma (k : Nat) (add n k = m)
 
 \func < (n m : Nat) : \Type => \Sigma (k : Nat) (add n (Nat.succ k) = m)
@@ -17,6 +18,7 @@
 \func SemiGroup : \Type => \Sigma (A : \Type) (m : A -> A -> A) (\Pi (x y z : A) -> m x (m y z) = m (m x y) z)
 
 -- Defining these as functions clearly works but it would be better to define SemiGroup as a class
+
 \class Magma
   | A : \Type
   | \infixl 7 * : A -> A -> A

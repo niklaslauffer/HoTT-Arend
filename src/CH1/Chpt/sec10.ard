@@ -2,10 +2,13 @@
  In Arend we can use pattern matching to define the inductor because it is an explicit way to do that.
  Infinite loops in Arend also will not compile
 -}
+
 \import CH1.Chpt.sec09
 
 -- You will see that clearly this definition is infinite and does not terminate.
+
 \func badDef (n : Nat) : Nat
   | Nat.zero => Nat.zero
   | Nat.succ n => badDef(Nat.succ(Nat.succ n))
+
 -- If we look at the recursor this behavior would not be allowed.
