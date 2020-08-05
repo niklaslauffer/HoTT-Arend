@@ -26,7 +26,8 @@
   | Nat.succ n => cs n (recN C c0 cs n)
   | _ => {?}
 
-\func indN (C : Nat -> \Type) (c0 : C Nat.zero) (cs : \Pi (n : Nat) -> C n -> C (Nat.succ n)) (n : Nat) : C n \elim n
+\func indN (C : Nat -> \Type) (c0 : C Nat.zero)
+           (cs : \Pi (n : Nat) -> C n -> C (Nat.succ n)) (n : Nat) : C n \elim n
   | Nat.zero => c0
   | Nat.succ n => cs n (indN C c0 cs n)
   | _ => {?}

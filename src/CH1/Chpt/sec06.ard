@@ -20,19 +20,21 @@
 
 -- 1)
 
-\func ex&& {A : \Type} {B : A -> \Type} (a : A) (b : B a) : A && B => (a, b)
+\cons ex&& {A : \Type} {B : A -> \Type} (a : A) (b : B a) : A && B => (a, b)
 
 -- 2)
 -- 3)
 -- Recursor
 
-\func rec&& {A : \Type} {B : A -> \Type} (C : \Type) (g : \Pi(a : A) -> B a -> C) (x : A && B) : C \elim x
+\func rec&& {A : \Type} {B : A -> \Type}
+            (C : \Type) (g : \Pi(a : A) -> B a -> C) (x : A && B) : C \elim x
   | (a,b) => g a b
   | _ => {?}
 
 -- Inductor
 
-\func ind&& {A : \Type} {B : A -> \Type} (C : A && B -> \Type) (g : \Pi(a : A) (b : B a) -> C (a,b)) (p : A && B) : C p \elim p
+\func ind&& {A : \Type} {B : A -> \Type}
+            (C : A && B -> \Type) (g : \Pi(a : A) (b : B a) -> C (a,b)) (p : A && B) : C p \elim p
   | (a,b) => g a b
   | _ => {?}
 
@@ -43,7 +45,8 @@
 \func pr1 {A : \Type} {B : A -> \Type} (x : A && B) : B (pr0 {A} {B} x) =>
   ind&& {A} {B} (\lam x => B (pr0 {A} {B} x)) (\lam _ b => b) x
 
-\func ac {A B : \Type} {R : A -> B -> \Type} : (\Pi (x : A) -> \Sigma (y : B) (R x y)) -> (\Sigma (f : A -> B) (\Pi(x : A) -> R x (f x))) =>
+\func ac {A B : \Type} {R : A -> B -> \Type} :
+  (\Pi (x : A) -> \Sigma (y : B) (R x y)) -> (\Sigma (f : A -> B) (\Pi(x : A) -> R x (f x))) =>
   \lam g => (\lam x => (g x).1 , \lam x => (g x).2)
 
 \func Magma : \Type => \Sigma (A : \Type) (A -> A -> A)

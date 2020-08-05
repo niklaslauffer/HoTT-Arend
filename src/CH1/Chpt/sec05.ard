@@ -9,7 +9,7 @@
 -- a : A, b : B, (a,b) : A xx B.
 -- Let's try it!
 
-\func exAxxB (A B : \Type) (a : A) (b : B) : A xx B => (a,b)
+\cons exAxxB {A B : \Type} (a : A) (b : B) : A xx B => (a,b)
 
 -- 2) The type eliminators: recursor, inductor
 -- 3) Computation rule of the eliminators
@@ -23,7 +23,8 @@
 -- notice the use of the {?} as it says we only understand this for elements that look like (a,b)
 
 \func indAxxB {A B : \Type}
-              (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y)) (z : A xx B) : C(z) \elim z
+              (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y))
+              (z : A xx B) : C(z) \elim z
   | (a,b) => g(a)(b)
   |  _ => {?}
 

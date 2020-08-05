@@ -1,0 +1,68 @@
+-- For now we use Id like so
+
+\func Id {A : \Type} (a b : A) : \Type => a = b
+
+-- At some point we will delve into Arend's construction of the equality type.
+
+-- The reflexive function given by:
+
+\func refl {A : \Type} (a : A) : a = a => path(\lam _ => a)
+
+-- If you are familiar with paths this is just the constant path to a
+-- In arend a library function idp is used, defined in the prelude:
+
+\import CH1.Chpt.sec04
+
+-- Indiscernibility of identicals
+
+\func recPath {A : \Type} (C : A -> \Type) (x y : A) (p : x = y) : C x -> C y \elim y,p
+  | x, idp => id
+  | _, _ => {?}
+
+-- This is also called transport
+
+\func transport => recPath
+
+-- Path Induction
+
+\func indPath {A : \Type} (C : \Pi (x y : A) -> x = y -> \Type)
+              (c : \Pi (x : A) -> C x x idp)
+              (x y : A) (p : x = y) : C x y p \elim y, p
+  | x, idp => c x
+  | _, _ => {?}
+
+-- Based Path Induction
+
+\func indPath' {A : \Type} (a : A) (C : \Pi (x : A) -> a = x -> \Type)
+               (c : C a idp) (x : A) (p : a = x) : C x p \elim x, p
+  | a, idp => c
+  | _, _ => {?}
+
+\func J => indPath
+
+\func Jalt => indPath'
+
+-- Now we want to prove that we can implement one with the other.
+
+\func indPathwithIndPath' {A : \Type} (C : \Pi (x y : A) -> x = y -> \Type)
+                          (c : \Pi (x : A) -> C x x idp) (x y : A) (p : x = y) : C x y p =>
+  indPath' x (C x) (c x) y p
+
+\func indPath'withIndPath {A : \Type} (a : A) (C : \Pi (x : A) -> a = x -> \Type)
+                          (c : C a idp) (x : A) (p : a = x) : C x p =>
+  indPath D d a x p C c \where
+{
+  \func D {A : \Type} (x y : A) (p : x = y) : \Type => \Pi (C : \Pi(z : A) -> x = z -> \Type) -> C x idp -> C y p
+
+  \func d {A : \Type} (x : A) : D x x idp => \lam C (c : C x idp) => c
+}
+
+-- Thus these definitions are equivalent.
+{-
+Understanding arguments like this is really important as Chapter 2 will be filled with these kinds of proofs.
+Make sure you understand the construction of each component and where each argument is pulled from.
+-}
+
+\import CH1.Chpt.sec07
+
+\func \infix 1 =/= {A : \Type} (x y : A) : \Type => x = y -> Zero
