@@ -1,0 +1,35 @@
+\import CH1.Def.path
+-- Obviously Prelude's Nat type will be much more useful but for problems use this one:
+\data Nat
+  | zero
+  | succ Nat
+  \where
+  {
+    \func rec (C : \Type) (c0 : C) (cs : Nat -> C -> C) (n : Nat) : C \elim n
+      | zero => c0
+      | succ n => cs n (rec C c0 cs n)
+      | _ => {?}
+
+    \func ind (C : Nat -> \Type) (c0 : C zero)
+              (cs : \Pi (n : Nat) -> C n -> C (succ n)) (n : Nat) : C n \elim n
+      | zero => c0
+      | succ n => cs n (ind C c0 cs n)
+      | _ => {?}
+
+    \func \infixl 7 + (n0 n1 : Nat) : Nat =>
+      rec (Nat -> Nat) id (\lam _ g m => succ (g m)) n0 n1
+
+    \func double (n : Nat) : Nat =>
+      rec Nat zero (\lam _ y => succ (succ y)) n
+
+    \func assoc (i j k : Nat) : i + (j + k) = i + j + k =>
+      ind (\lam i => \Pi (j k : Nat) -> i  + (j + k) = i + j + k) (assoc_0) (assoc_s) i j k \where
+    {
+      \func assoc_0 => \lam j k => idp {Nat} {j + k}
+
+      \func ap_succ {m n : Nat} : (m = n) -> (succ m = succ n) => {?}
+
+      \func assoc_s (i : Nat) (h : \Pi(j k : Nat) -> i + (j + k) = i + j + k) (j k : Nat) :
+        (Nat.succ i) + (j + k) = (Nat.succ i)  + j + k => ap_succ(h j k)
+    }
+  }

@@ -1,0 +1,19 @@
+\func \infix 6 xx (A B : \Type) : \Type => \Sigma A B
+
+\func recAxxB {A B : \Type}
+              (C : \Type) (g : A -> B -> C) (z : A xx B) : C \elim z
+  | (a,b) => g(a)(b)
+  | _ => {?}
+
+\func indAxxB {A B : \Type}
+              (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y))
+              (z : A xx B) : C(z) \elim z
+  | (a,b) => g(a)(b)
+  |  _ => {?}
+
+\func pr0_xx {A B : \Type} (x : A xx B) : A => recAxxB A (\lam a _ => a) x
+
+\func pr1_xx {A B : \Type} (x : A xx B) : B => recAxxB B (\lam _ b => b) x
+
+\func uniqAxxB {A B : \Type} (x : A xx B) : (pr0_xx x, pr1_xx x) = x =>
+  indAxxB(\lam x => (pr0_xx x, pr1_xx x) = x) (\lam a b => idp {A xx B} {(a, b)}) x

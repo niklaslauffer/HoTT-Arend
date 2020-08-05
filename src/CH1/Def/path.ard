@@ -1,0 +1,16 @@
+\func id {A : \Type} (a : A) : A => a
+
+\func recPath {A : \Type} (C : A -> \Type) (x y : A) (p : x = y) : C x -> C y \elim y,p
+  | x, idp => id
+  | _, _ => {?}
+
+\func J {A : \Type} (C : \Pi (x y : A) -> x = y -> \Type)
+              (c : \Pi (x : A) -> C x x idp)
+              (x y : A) (p : x = y) : C x y p \elim y, p
+  | x, idp => c x
+  | _, _ => {?}
+
+\func Jalt {A : \Type} (a : A) (C : \Pi (x : A) -> a = x -> \Type)
+               (c : C a idp) (x : A) (p : a = x) : C x p \elim x, p
+  | a, idp => c
+  | _, _ => {?}

@@ -46,8 +46,10 @@
   ind&& {A} {B} (\lam x => B (pr0 {A} {B} x)) (\lam _ b => b) x
 
 \func ac {A B : \Type} {R : A -> B -> \Type} :
-  (\Pi (x : A) -> \Sigma (y : B) (R x y)) -> (\Sigma (f : A -> B) (\Pi(x : A) -> R x (f x))) =>
-  \lam g => (\lam x => (g x).1 , \lam x => (g x).2)
+  (\Pi (x : A) -> B && R x) -> (\Sigma (f : A -> B) (\Pi(x : A) -> R x (f x))) =>
+  \lam g => (\lam x => pr0 {B} {R x} (g x), \lam x => pr1 {B} {R x} (g x))
+
+-- Here we need to use the projections that arend gives us, this would be defin
 
 \func Magma : \Type => \Sigma (A : \Type) (A -> A -> A)
 

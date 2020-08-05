@@ -1,0 +1,20 @@
+\import CH1.Def.two
+
+\func \infix 6 || (A : \Type) (B : \Type) : \Type => \Sigma (x : Two) (recTwo \Type A B x)
+
+\func in0 {A B : \Type} (a : A) : A || B => (Two.zero, a)
+
+\func in1 {A B : \Type} (b : B) : A || B => (Two.one, b)
+
+\func recA||B {A B : \Type}
+              (C : \Type) (g0 : A -> C) (g1 : B -> C) (x : A || B) : C \elim x
+  | (Two.zero, a) => g0 a
+  | (Two.one, b) => g1 b
+  | _ => {?}
+
+\func indA||B {A B : \Type}
+              (C : (A || B) -> \Type) (g0 : \Pi(a : A) -> C (in0 a))
+              (g1 : \Pi (b : B) -> C (in1 b)) (x : A || B) : C x \elim x
+  | (Two.zero, a) => g0 a
+  | (Two.one, b) => g1 b
+  | _ => {?}

@@ -1,0 +1,7 @@
+\data Zero
+
+\func recZero (C : \Type) (z : Zero) : C \elim z
+  | _ => {?}
+
+\func indZero (C : Zero -> \Type) (z : Zero) : C z \elim z
+  | _ => {?}

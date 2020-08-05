@@ -1,0 +1,16 @@
+\func \infix 6 && (A : \Type) (B : A -> \Type) : \Type => \Sigma (x : A) (B x)
+
+\func rec&& {A : \Type} {B : A -> \Type}
+            (C : \Type) (g : \Pi(a : A) -> B a -> C) (x : A && B) : C \elim x
+  | (a,b) => g a b
+  | _ => {?}
+
+\func ind&& {A : \Type} {B : A -> \Type}
+            (C : A && B -> \Type) (g : \Pi(a : A) (b : B a) -> C (a,b)) (p : A && B) : C p \elim p
+  | (a,b) => g a b
+  | _ => {?}
+
+\func pr0 {A : \Type} {B : A -> \Type} (x : A && B) : A => rec&& {A} {B} A (\lam a _ => a) x
+
+\func pr1 {A : \Type} {B : A -> \Type} (x : A && B) : B (pr0 {A} {B} x) =>
+  ind&& {A} {B} (\lam x => B (pr0 {A} {B} x)) (\lam _ b => b) x
