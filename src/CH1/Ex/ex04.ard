@@ -1,0 +1,11 @@
+\import CH1.Def.nat
+
+\func iter (C : \Type) (c0 : C) (cs : C -> C) (n : Nat) : C \elim n
+  | zero => c0
+  | succ n => cs (iter C c0 cs n)
+
+-- Define the recursor for N in terms of iter
+
+\func rec (C : \Type) (c0 : C) (cs : Nat -> C -> C) (n : Nat) : C => {?}
+
+-- Show the defining equations for the recursor hold true using the Nat.ind

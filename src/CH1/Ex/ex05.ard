@@ -1,0 +1,11 @@
+\import CH1.Def.Two
+
+\func \infixr 2 ++ (A B : \Type) : \Type => \Sigma (b : Two) (Two.rec \Type A B b)
+
+\func in0 {A B : \Type} (a : A) : A ++ B => {?}
+
+\func in1 {A B : \Type} (a : B) : A ++ B => {?}
+
+\func ind {A B : \Type}
+          (C : (A ++ B) -> \Type) (g0 : \Pi(a : A) -> C (in0 a))
+          (g1 : \Pi (b : B) -> C (in1 b)) (x : A ++ B) : C x => {?}

@@ -1,0 +1,28 @@
+\import CH1.Def.nat
+
+-- Use Nat.rec for this
+
+\func \infixl 7 * (n0 n1 : Nat) : Nat => {?}
+
+\func \infixl 8 ^ (n0 n1 : Nat) : Nat => {?}
+
+-- Before doing the +-commu part of the problem make sure to do ex 16
+
+\import AS.ring
+
+\instance Nat-Semiring : Semiring Nat
+  | + => Nat.+
+  | +-assoc => Nat.assoc
+  | +-commu => {?}
+  | e0 => Nat.zero
+  | +-identl => {?}
+  | +-identr => {?}
+  | * => *
+  | *-assoc => {?}
+  | e1 => Nat.succ Nat.zero
+  | *-identl => {?}
+  | *-identr => {?}
+  | *-distrl => {?}
+  | *-distrr => {?}
+  | *-annihl => {?}
+  | *-annihr => {?}

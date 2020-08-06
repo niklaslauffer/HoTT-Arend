@@ -1,0 +1,12 @@
+\import CH1.Def.Two
+
+\func \infixr 2 xx (A B : \Type) : \Type => \Pi (x : Two) -> Two.rec \Type A B x
+
+\func ind {A B : \Type}
+          (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C (pair x y))
+          (z : A xx B) : C(z) => {?} \where
+{
+  \func pair {A B : \Type} (a : A) (b : B) (x : Two) : Two.rec \Type A B x \elim x
+    | zero => a
+    | one => b
+}

@@ -1,0 +1,16 @@
+\class Semiring (A : \Type)
+  | \infixl 5 + : A -> A -> A
+  | +-assoc (a b c : A) : a + (b + c) = a + b + c
+  | +-commu (a b : A) : a + b = b + a
+  | e0 : A
+  | +-identl (a : A) : e0 + a = a
+  | +-identr (a : A) : a + e0 = a
+  | \infixl 6 * : A -> A -> A
+  | *-assoc (a b c : A) : a * b * c = a * (b * c)
+  | e1 : A
+  | *-identl (a : A) : e1 * a = a
+  | *-identr (a : A) : a * e1 = a
+  | *-distrl (a b c : A) : (a + b) * c = a * c + b * c
+  | *-distrr (a b c : A) : a * (b + c) = a * b + a * c
+  | *-annihl (a : A) : e0 * a = e0
+  | *-annihr (a : A) : a * e0 = e0

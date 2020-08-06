@@ -2,6 +2,18 @@
 
 -- We import the information about the Two type
 
+\data Two | zero | one
+
+\func recTwo (C : \Type) (c0 c1 : C) (t : Two) : C \elim t
+  | zero => c0
+  | one => c1
+  | _ => {?}
+
+\func indTwo (C : Two -> \Type) (c0 : C zero) (c1 : C one) (t : Two) : C t \elim t
+  | zero => c0
+  | one => c1
+  | _ => {?}
+
 \func uniqTwo (C : Two -> \Type) (x : Two) : (x = Two.zero) || (x = Two.one) =>
   indTwo (\lam x => (x = Two.zero) || (x = Two.one)) (in0 idp) (in1 idp) x
 

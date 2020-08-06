@@ -1,11 +1,12 @@
-\data One | star
+\data One | star \where
+{
+  \func rec (C : \Type) (c : C) (star : One) : C \elim star
+    | star => c
+    | _ => {?}
 
-\func recOne (C : \Type) (c : C) (star : One) : C \elim star
-  | star => c
-  | _ => {?}
+  \func ind (C : One -> \Type) (c : C star) (x : One) : C x \elim x
+    | star => c
+    | _ => {?}
 
-\func indOne (C : One -> \Type) (c : C One.star) (x : One) : C x \elim x
-  | star => c
-  | _ => {?}
-
-\func uniqOne (x : One) : x = One.star => indOne (\lam y => y = One.star) idp x
+  \func uniq (x : One) : x = star => ind (\lam y => y = star) idp x
+}

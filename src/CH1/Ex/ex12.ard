@@ -1,0 +1,8 @@
+\import CH1.Def.zero
+
+-- State and prove the following
+-- If A, then (if B then A)
+
+-- If A, then not (not A)
+
+-- If (not A or not B), then not (A and B)

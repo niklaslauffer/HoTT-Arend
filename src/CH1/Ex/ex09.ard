@@ -1,0 +1,5 @@
+\import CH1.Def.nat
+
+\func Fin (n : Nat) : \Type => {?}
+
+\func fmax (n : Nat) : Fin (Nat.succ n) => {?}

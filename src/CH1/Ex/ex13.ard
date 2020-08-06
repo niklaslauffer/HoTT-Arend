@@ -1,0 +1,4 @@
+\import CH1.Def.zero
+\import CH1.Def.coproduct
+
+\func notExcludedMiddle {P : \Type} : ((P || (P -> Zero)) -> Zero) -> Zero => {?}

@@ -1,0 +1,3 @@
+\import CH1.Def.zero
+
+\func nnnAisnA {A : \Type} (w : ((A -> Zero) -> Zero) -> Zero) (a : A) : Zero => {?}

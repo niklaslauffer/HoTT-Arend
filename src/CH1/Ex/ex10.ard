@@ -1,0 +1,10 @@
+\import CH1.Def.nat
+
+\func ack (n0 n1 : Nat) : Nat \elim n0, n1
+  | zero, n => succ n
+  | succ m , zero => ack m (succ zero)
+  | succ m , succ n => ack m (ack (succ m) n)
+
+\func ack_Rec (n0 n1 : Nat) : Nat => {?}
+
+\func ack_RecIsack (n0 n1 : Nat) : ack n0 n1 = ack_Rec n0 n1 => {?}

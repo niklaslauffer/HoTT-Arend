@@ -1,4 +1,4 @@
-\import CH1.Def.def
+\func \infixl 5 o {A B C : \Type} (g : B -> C) (f : A -> B) : A -> C => \lam a => g (f a)
 
 -- Ex 1.1
 

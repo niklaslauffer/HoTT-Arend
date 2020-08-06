@@ -1,0 +1,3 @@
+\import CH1.Def.nat
+
+\func +-comm (i j : Nat) : i Nat.+ j = j Nat.+ i => {?}

@@ -1,7 +1,8 @@
-\data Zero
+\data Zero \where
+{
+  \func rec (C : \Type) (z : Zero) : C \elim z
+    | _ => {?}
 
-\func recZero (C : \Type) (z : Zero) : C \elim z
-  | _ => {?}
-
-\func indZero (C : Zero -> \Type) (z : Zero) : C z \elim z
-  | _ => {?}
+  \func ind (C : Zero -> \Type) (z : Zero) : C z \elim z
+    | _ => {?}
+}

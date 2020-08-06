@@ -1,7 +1,0 @@
-\import CH1.Def.zero
-\import CH1.Def.one
-\import CH1.Def.product
-\import CH1.Def.coproduct
-\import CH1.Def.two
-\import CH1.Def.nat
-\import CH1.Def.path

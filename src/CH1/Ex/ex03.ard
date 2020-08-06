@@ -1,0 +1,9 @@
+\import CH1.Def.product
+
+-- Make sure to use the pr0 and pr1 as defined in the products, and uniqAxxB
+
+\func indAxxB_pr {A B : \Type}
+                 (C : A xx B -> \Type) (g : \Pi (x : A) (y : B) -> C(x,y))
+                 (z : A xx B) : C(z) => {?}
+
+-- Generalize uniqAxxB to Sigma types and then build the recursor using the projections and the uniqueness principle

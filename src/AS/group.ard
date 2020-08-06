@@ -1,0 +1,10 @@
+\class Group (A : \Type)
+  | \infixl 6 * : A -> A -> A
+  | *-assoc (a b c : A) : a * b * c = a * (b * c)
+  | e : A
+  | e-identl (a : A) : e * a = a
+  | e-identr (a : A) : a * e = a
+  | *-inverl (a : A) : \Sigma (b : A) (a * b = e) (b * a = e)
+
+\class Commgroup \extends Group
+  | *-comm (a b : A) : a * b = b * a

@@ -1,0 +1,5 @@
+\import CH1.Def.path
+
+-- make sure you use J or Jalt to prove this
+
+\func recPath {A : \Type} (C : A -> \Type) (x y : A) (p : x = y) : C x -> C y => {?}

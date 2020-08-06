@@ -1,5 +1,7 @@
 \import CH1.Def.path
+
 -- Obviously Prelude's Nat type will be much more useful but for problems use this one:
+
 \data Nat
   | zero
   | succ Nat
@@ -16,7 +18,7 @@
       | succ n => cs n (ind C c0 cs n)
       | _ => {?}
 
-    \func \infixl 7 + (n0 n1 : Nat) : Nat =>
+    \func \infixl 6 + (n0 n1 : Nat) : Nat =>
       rec (Nat -> Nat) id (\lam _ g m => succ (g m)) n0 n1
 
     \func double (n : Nat) : Nat =>
