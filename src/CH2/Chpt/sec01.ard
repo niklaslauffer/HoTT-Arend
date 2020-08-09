@@ -1,0 +1,150 @@
+-- Chapter 2. Homotopy Type Theory
+-- in this chapter we are going to see what kind of structures do the identity types have, given its inductor.
+-- We are going to see that path induction gives types in intensional Type Theory the structure of infinity groupoids,
+-- or (infty, 0) categories.
+
+-- Note that Arend uses the identity type via the interval type, and all the properties of the identity type, as well
+-- as function extensionality, can be derived from the existence of the interval type, but following the book,
+-- we are going to explore the structures of identity type from the inductor.
+
+-- we recall the important part of the definition of the inductor of the identity type:
+
+\func J {A : \Type} (C : \Pi (x y : A) -> x = y -> \Type) (c : \Pi(x : A) -> C x x idp)
+        (x y : A) (p : x = y) : C x y p \elim p
+  | idp => c(x)
+  | _ => {?}
+
+-- 2.1 Types of higher groupoids
+
+-- we are going to show that equality is symmetric, or homotopically, every path has an inverse path, with inv idp :== idp:
+
+\func inv' {A : \Type} {x  y : A} (p : x = y) : (y = x) =>
+  J (\lam x y p => y = x) (\lam x => idp) x y p
+
+{-
+Notice here that the use of pattern matching allows us to call to the inductor
+The second argument to J can only be idp and since as stated in chapter one, when eliminating paths we only care about idp:
+ -}
+
+\func inv {A : \Type} {x  y : A} (p : x = y) : (y = x) \elim p
+  | idp => idp
+
+-- transitivity of equality, or that path concatenates, again we have idp * idp :== idp:
+
+\func \infixl 3 * {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z) \elim p, q
+  | idp, idp => idp
+
+-- now we can show some trivial relations of inverse path, concatenation...
+
+\func idp_right_unit {A : \Type} {x y : A} (p : x = y) : p = p * idp \elim p
+  | idp => idp
+
+\func idp_left_unit {A : \Type} {x y : A} (p : x = y) : p = idp * p \elim p
+  | idp => idp
+
+-- this shows that reflexivity idp is the unit object with respect to concatenation.
+
+\func inv_right_inverse {A : \Type} {x y : A} {p : x = y} : inv p * p = idp \elim p
+  | idp => idp
+
+\func inv_left_inverse {A : \Type} {x y : A} {p : x = y} : p * inv p = idp \elim p
+  | idp => idp
+
+-- this shows that inverse path is infact the inverse.
+
+\func inv_is_involutive {A : \Type} (x y : A) (p : x = y) : inv (inv p) = p \elim p
+  | idp => idp
+
+-- lastly, we are going to show that concatenation is "homotopically" associative:
+
+\func *-assoc {A : \Type} {x y z w : A} (p : x = y) (q : y = z) (r : z = w) :
+  p * (q * r) = (p * q) * r \elim p,q,r
+  | idp, idp, idp => idp
+
+{- note now that we have associativity, there are two ways to go from
+p * (q * (r * s)) to (p * q) * r) * s, and one can ask how these two equalities are the same.
+-}
+
+-- with that in mind, we are going to define the most important case of identity types:
+
+\func Loop {A : \Type} (a : A) : \Type => a = a
+
+-- note that Loop {A} (a) is canonically pointed, with the reflexivity ipd {A} {a} inhabiting it,
+-- now we can ask for the double loop space:
+
+\func Loop^2 {A : \Type} (a : A) : \Type => idp {A} {a} = idp {A} {a}
+
+-- now we are going to proof the famous Eckmann-Hilton principle, which says that the double loops space
+-- has concatenation commutative (E^2 commutative):
+
+{-\func EckHil {A : \Type} {a : A} {alpha beta : Loop^2 {A} (a)} : alpha * beta = beta * alpha
+  => {?} -}
+
+-- first we have to define how the composition of 1 loops gives an operation on double loop, and for
+-- more general identity types:
+
+\func \infixl 4 *r {A : \Type} {a b c : A} {p q : a = b}
+                   (alpha : p = q) (r : b = c) :
+  p * r = q * r \elim r
+  | idp => inv (idp_right_unit p) * alpha * idp_right_unit q
+
+\func \infixl 4 *l {A : \Type} {a b c : A} (p : a = b) {r s : b = c}
+                   (beta : r = s) : p * r = p * s \elim p
+  | idp => inv (idp_left_unit r) * beta * idp_left_unit s
+
+\func \infixl 5 ** {A : \Type} {a b c : A} {p q : a = b} {r s : b = c}
+                   (alpha : p = q) (beta : r = s) : p * r = q * s => alpha *r r * q *l beta
+
+-- now let's define the star operation on second loop space:
+
+\func \infix 4 *2 {A : \Type} {a : A} (alpha beta : Loop^2 a) : Loop^2 a =>
+  alpha ** beta
+
+-- now we will prove that alpha Start beta = alpha * beta:
+
+\func sub_path {A : \Type} {a b : A} (p : a = b) : idp * p * idp = p \elim p
+  | idp => idp
+
+\func *2=* {A : \Type} {a : A} (alpha beta : Loop^2 a) : alpha *2 beta = alpha * beta => sub_path alpha ** sub_path beta
+
+\func \infixl 5 **' {A : \Type} {a b c : A} {p q : a = b} {r s : b = c}
+                    (alpha : p = q) (beta : r = s) : p * r = q * s =>
+  p *l beta * alpha *r s
+
+\func \infix 4 *2' {A : \Type} {a : A}
+                   (alpha beta : Loop^2 a) : Loop^2 a =>
+  alpha **' beta
+
+\func *2'=* {A : \Type} {a : A}
+            (alpha beta : Loop^2 a) : alpha *2' beta = beta * alpha =>
+  sub_path beta ** sub_path alpha
+
+-- finally, I just have to show that ** = **'
+
+\func **=**' {A : \Type} {a b c : A} {p q : a = b} {r s : b = c}
+             (alpha : p = q) (beta : r = s) : alpha ** beta = alpha **' beta
+\elim p, r, alpha, beta
+  | idp, idp, idp , idp => idp
+
+\func EckHil {A : \Type} {a : A} {alpha beta : Loop^2 a} : alpha * beta = beta * alpha =>
+  inv (*2=* alpha beta) * **=**' alpha beta * *2'=* alpha beta
+
+-- we will finish this chapter with some more definitions:
+-- P is the pointed type
+
+\func P : \Type => \Sigma (A : \Type) A
+
+-- an inhabitant of the pointed type is an type A together with a base point a : A
+
+-- given a pointed type (A , a), we again define its loops space:
+-- Loop space
+
+\func L : P -> P =>
+  \lam x => (x.2 = x.2, idp)
+
+-- inductively we can define the n-th loop space inductively:
+-- This will be denoted by big-O for Omega
+
+\func O (n : Nat) (x : P) : P \elim n
+  | 0 => x
+  | suc n => L (O n x)
