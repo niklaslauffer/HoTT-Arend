@@ -4,7 +4,7 @@
 
 \import CH1.Chpt.sec05
 
-\func deMorganLaws {A B : \Type} (f : Neg A) (g : Neg B) : Neg (A ++ B) => recA++B Zero f g
+\func deMorganLaws {A B : \Type} (f : Neg A) (g : Neg B) : Neg (A || B) => recA||B Zero f g
 
 \func anotherTaut {A : \Type} {P Q : A -> \Type} (x : \Pi (a : A) -> P a xx Q a) :
   (\Pi (a : A) -> P a) xx (\Pi (a : A) -> Q a) => (\lam a => pr0_xx (x a), \lam a => pr1_xx (x a))
