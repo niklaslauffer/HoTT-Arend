@@ -1,4 +1,6 @@
 \import CH2.Chpt.sec01
+\import CH1.Def.comp
+\import CH1.Def.path
 
 -- 2.2 Functions are functors
 
@@ -8,40 +10,38 @@ to paths, and higher paths to higher paths. Topologically, we see that all funct
 -- functions take paths to paths, and it takes reflexivity to reflexivity:
 
 \func ap {A B : \Type} {x y : A} (f : A -> B) (p : x = y) : f x = f y \elim p
-  | idp => idp
+  | idp => idp \where
+{
+  -- recall that we used ap_succ => ap succ in CH1.Chpt.sec09
 
--- recall that we used ap_succ => ap succ in CH1.Chpt.sec09
+  -- function ap is called application, or action on paths.
 
--- function ap is called application, or action on paths.
+  -- basics lemmas about ap f, how it behave with composition and inverses:
 
--- basics lemmas about ap f, how it behave with composition and inverses:
+  \func distribute_* {A B : \Type} {x y z : A}
+                     (p : x = y) (q : y = z) (f : A -> B) :
+    ap f (p * q) = ap f p * ap f q \elim p,q
+    | idp, idp => idp
 
-\func ap_commute_with_* {A B : \Type} {x y z : A}
-                        (p : x = y) (q : y = z) (f : A -> B) :
-  ap f (p * q) = (ap f p) * (ap f q) \elim p,q
-  | idp , idp => idp
+  \func distribute_inv {A B : \Type} {x y : A}
+                       (p : x = y) (f : A -> B) :
+    ap f (inv p) = inv (ap f p) \elim p
+    | idp => idp
 
-\func ap_commute_with_inv {A B : \Type} {x y z : A}
-                          (p : x = y) (f : A -> B) :
-  ap f (inv p) = inv (ap f p) \elim p
-  | idp => idp
+  -- recall definition of composition of functions from CH1.Ex.ex01
 
--- recall definition of composition of functions from CH1.Ex.ex01
+  \func distribute_o {A B C : \Type} {x y : A}
+                     (p : x = y) (f : A -> B) (g : B -> C) :
+    ap (g o f) p = (ap g o ap f) p  \elim p
+    | idp => idp
 
-\import CH1.Def.comp
+  -- Recall the identity function
 
-\func ap_commute_with_comp {A B C : \Type} {x y z : A}
-                           (p : x = y) (f : A -> B) (g : B -> C) :
-  ap g (ap f p) = ap (g o f) p \elim p
-  | idp => idp
+  \func involutive_id {A : \Type} {x y : A}
+                      (p : x = y) :
+    ap id p = p \elim p
+    | idp => idp
+  -- note that these rules themselves have higher coherence laws.
+}
 
--- We recall the identity function
-
-\import CH1.Def.path
-
--- note that these rule themselves have higher coherence laws.
-
-\func id_func_is_id {A : \Type} {x y : A} (p : x = y) :
-  ap id p = p \elim p
-  | idp => idp
 

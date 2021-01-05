@@ -16,18 +16,18 @@
 -- we think about tranport as "path lifting", it moves the fibers. Thus Sigma types in type theory
 -- look like fibrations. Given a path downstairs, we can show that there is a path lifting it.
 
+\import CH1.Def.depPair
+
 \func lift {A : \Type} {x y : A}
-           (P : A -> \Type)  (u : P x)  (p : x = y) :
-  (x,u) = {\Sigma (x : A) (P x)} (y, transport P p u) \elim p
+           (P : A -> \Type) (u : P x) (p : x = y) :
+  (x,u) = {A && P} (y, transport P p u) \elim p
  | idp => idp
 
 -- now we can show that this path covers p down below:
 
-\func pr0 {A : \Type} (P : A -> \Type) : \Sigma (x : A) (P x) -> A => \lam u => u.1
-
 \func lift_is_a_lift {A : \Type} {x y : A}
                      (P : A -> \Type) (p : x = y) (u : P x) :
-  ap (pr0 P) (lift P u p) = p \elim p
+  ap (&&.pr0 {A} {P}) (lift P u p) = p \elim p
   | idp => idp
 
 -- note in classical homotopy theory, for fibrations there only "exist" liftings of paths, but here we have a canonical
@@ -41,17 +41,17 @@
 
 -- now let's prove that transport does nothing on trivial families:
 
-\func constant_transport {A B : \Type} {x y : A} (f : A  -> B) (p : x = y) (b : B) :
+\func const_transport {A B : \Type} {x y : A} (f : A  -> B) (p : x = y) (b : B) :
   transport (\lam x => B) p b = b \elim p
   | idp => idp
 
 \func apd=ap {A B : \Type} {x y : A} (f : A -> B) (p : x = y) :
-  apd f p = constant_transport f p (f x) * ap f p \elim p
+  apd f p = const_transport f p (f x) * ap f p \elim p
   | idp => idp
 
 -- where is some more homotopy coherence for transport:
 
-\func t_commute_with_can {A : \Type} {P : A -> \Type} {x y z : A}
+\func t_commute_with_concat {A : \Type} {P : A -> \Type} {x y z : A}
                                  (p : x = y) (q : y = z) (u : P x) :
   transport P q (transport P p u) = transport P (p * q) u \elim p, q
   | idp, idp => idp

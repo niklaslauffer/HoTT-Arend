@@ -6,6 +6,8 @@
   | zero
   | succ Nat
 
+\cons 0 : Nat => zero
+\cons 1 : Nat => suc zero
 -- We will introduce it formally later on
 
 -- We are using pattern matching in order to define this with primative recursion

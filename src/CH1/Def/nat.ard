@@ -19,7 +19,7 @@
       | _ => {?}
 
     \func \infixl 6 + (n0 n1 : Nat) : Nat =>
-      rec (Nat -> Nat) id (\lam _ g m => succ (g m)) n0 n1
+      rec (Nat -> Nat) id (\lam (n : Nat) (g : Nat -> Nat) (m : Nat) => succ (g m)) n0 n1
 
     \func double (n : Nat) : Nat =>
       rec Nat zero (\lam _ y => succ (succ y)) n
@@ -32,6 +32,6 @@
       \func ap_succ {m n : Nat} : (m = n) -> (succ m = succ n) => {?}
 
       \func assoc_s (i : Nat) (h : \Pi(j k : Nat) -> i + (j + k) = i + j + k) (j k : Nat) :
-        (Nat.succ i) + (j + k) = (Nat.succ i)  + j + k => ap_succ(h j k)
+        (Nat.succ i) + (j + k) = (Nat.succ i) + j + k => ap_succ(h j k)
     }
   }
