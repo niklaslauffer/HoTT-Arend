@@ -1,0 +1,160 @@
+\import CH1.Def.product
+\import CH1.Def.path
+\import CH1.Def.comp
+\import CH2.Chpt.sec01
+\import CH2.Chpt.sec02
+\import CH2.Chpt.sec03
+
+-- 2.4 Homotopies and equivalences
+
+-- tranditionally two functions are equal if they take on the same value.
+-- In HoTT the equality type encodes a continouous path.
+
+\func \infix 4 ~ {A : \Type} {P : A -> \Type} (f g : \Pi (x : A) -> P x) : \Type => \Pi (x : A) -> f x = g x \where
+
+  -- we will get back to how f ~ g relate to the type f = g
+
+  -- it is easy to show that ~ is a equivalence relation.
+{
+  \func refl {A : \Type} {P : A -> \Type} (f : \Pi (x : A) -> P x) :
+    f ~ {A} {P} f => \lam (x : A) => idp
+
+  \func symm {A : \Type} {P : A -> \Type} (f g : \Pi (x : A) -> P x) :
+    f ~ {A} {P} g -> g ~ {A} {P} f => \lam H x => inv (H x)
+
+  \func tran {A : \Type} {P : A -> \Type} {f g h : \Pi (x : A) -> P(x)} :
+    f ~{A}{P} g -> g ~{A}{P} h -> f ~{A}{P} h => \lam H H' x => (H x) * (H' x)
+
+  -- functions behave categorically like functors, and homotopies behave like natural transformations:
+
+  \func nat_trans {A B : \Type} {x y : A}
+                  (p : x = y) (f g : A -> B) (H : f ~{A}{\lam x => B} g) :
+    H x * g $ p = f $ p * H y \elim p
+    | idp => inv (*.r_unit (H x)) * *.l_unit (H x)
+
+  \func l_comp {A B C : \Type} (f f' : B -> C) (g : A -> B) (H : f ~{B} {\lam b => C} f') :
+    f o g ~{A} {\lam a => C} f' o g =>
+    \lam a => H (g a)
+
+  \func r_comp {A B C : \Type} (f : B -> C) (g g' : A -> B) (H : g ~{A} {\lam a => B} g') :
+    f o g ~{A} {\lam a => C} f o g' =>
+    \lam a => f $ (H a)
+
+  \func assoc_comp {A B C D : \Type} (h : C -> D) (g : B -> C) (f : A -> B) :
+    h o g o f ~{A}{\lam a => D} h o (g o f) =>
+    \lam a => idp
+}
+
+-- now we are going to prove a cute lemma:
+-- Corollary 2.4.4
+
+\func ~id_Behaves_id {A : \Type} (f : A -> A) (H : f ~ {A}{\lam x => A} id) (x : A) :
+  f $ H x = H (f x) =>
+  inv_is_inverse (f $ H x) (H x) * r_w_nat_trans f H x * id_hom_is_self f H x * inv (inv_is_inverse (H (f x)) (H x))
+  \where
+  {
+    \func inv_is_inverse {A : \Type} {x y z : A} (p : x = y) (q : y = z) :
+      p = p * q * inv q
+      | idp, idp => idp
+
+    \func r_w_nat_trans {A : \Type} (f : A -> A) (H : f ~{A}{\lam x => A} id) (x : A) :
+      f $ H x * H x * inv (H x) = H (f x) * id $ H x * inv (H x) => inv (~.nat_trans (H x) f id H) *r inv (H x)
+
+    \func =path_comp {A : \Type} {x y z w : A} (p : x = y) {q r : y = z} (t :  z = w) (alpha : q = r) :
+      p * q * t = p * r * t \elim alpha
+      | idp => idp
+
+    \func id_hom_is_self {A : \Type} (f : A -> A) (H : f ~ {A}{\lam x => A} id) (x : A) :
+      H (f x) * id $ H x * inv (H x) = H (f x) * H x * inv (H x) =>
+      =path_comp (H (f x)) (inv (H x)) (ap.involutive_id (H x))
+  }
+
+-- moving on to types, we call a function f : A -> B an isomorphism if there is an inverse g that compose both ways to identity.
+-- In homotopy theory, we call this a homotopy equivalence. Note that the trivial definition is actually not the one that we want.
+-- this is because in fact this choice is not contractible, we call such data quasi-inverse
+\record qinv {A B : \Type} (f : A -> B)
+{
+  | g : B -> A
+  | alpha : f o g ~ {B} {\lam b => B} id
+  | beta  : g o f ~ {A} {\lam a => A} id
+}\where
+{
+
+  \func symm {A B : \Type} (f : A -> B) (H : qinv f) : qinv H.g => \new qinv H.g f H.beta H.alpha
+
+  \func tran {A B C : \Type} (f : A -> B) (f' : B -> C) (H : qinv f) (H' : qinv f') : qinv (f' o f) =>
+    \new qinv (f' o f) (H.g o H'.g)
+        (~.tran {C}{\lam c => C} {f' o f o H.g o H'.g} {f' o H'.g} {id} (qhelp f f' H H') (H'.alpha))
+        (~.tran {A}{\lam a => A} {H.g o H'.g o f' o f} {H.g o f} {id} (qhelp2 f f' H H') (H.beta))
+    \where
+    {
+      \func qhelp {A B C : \Type} (f : A -> B) (f' : B -> C) (H : qinv f) (H' : qinv f') :
+        f' o f o H.g o H'.g ~{C}{\lam c => C} f' o H'.g => \lam c => f' $ (H.alpha (H'.g c))
+
+      \func qhelp2 {A B C : \Type} (f : A -> B) (f' : B -> C) (H : qinv f) (H' : qinv f') :
+        H.g o H'.g o f' o f  ~{A}{\lam c => A} H.g o f => \lam a => H.g $ (H'.beta (f a))
+    }
+  -- identity always have a quasi-inverse:
+
+  \func id_is {A : \Type} : qinv id => \new qinv id (id {A}) (\lam x => idp) (\lam x => idp)
+}
+
+-- concatenation of path with p : x = y : y = z -> x = z has inverse, which is concatenating with the inverse path.
+-- Tranport has inverse, which is given by transport with the inverse path.
+
+-- Now we are going to define a better version of isequiv.
+-- It turns out it is the propositional truncation of qinv(f), but it also has better properties:
+
+\record Equiv {A B : \Type}
+{
+  | f : A -> B
+  | g : B -> A
+  | alpha : f o g ~ {B}{\lam x => B} id
+  | h : B -> A
+  | beta  : h o f ~ {A}{\lam x => A} id
+}
+
+\func isequiv {A B : \Type} (f : A -> B) : \Type => Equiv f
+  \where
+  {
+    \func from_qinv {A B : \Type} (f : A -> B) (H : qinv f) : isequiv f => \new Equiv f H.g H.alpha H.g H.beta
+
+    -- We want to build the reverse so let's construct the parts
+
+    \func to_qinv {A B : \Type} (H : Equiv {A}{B}) : qinv f => \new qinv H.f H.g H.alpha (beta' f H) \where
+    {
+      \func gamma {A B : \Type} (f : A -> B) (H : isequiv f) :
+        H.g ~ {B} {\lam b => A} H.h =>
+        ~.tran {B} {\lam b => A}{H.g}{H.h o f o H.g}{H.h} (gamma1 f H) (gamma2 f H) \where
+      {
+        \func gamma1 {A B : \Type} (f : A -> B) (H : isequiv f) :
+          H.g ~ {B} {\lam b => A} H.h o f o H.g =>
+          ~.l_comp id (H.h o f) H.g (\lam a => inv (H.beta a))
+
+        \func gamma2 {A B : \Type} (f : A -> B) (H : isequiv f) :
+          H.h o (f o H.g) ~ {B} {\lam b => A} H.h =>
+          ~.r_comp H.h (f o H.g) id H.alpha
+      }
+
+      \func g_o_f~h_o_f {A B : \Type} (f : A -> B) (H : isequiv f) :
+        H.g o f ~ {A}{\lam a => A} H.h o f =>
+        ~.l_comp H.g H.h f (gamma f H)
+
+      \func beta' {A B : \Type} (f : A -> B) (H : isequiv f) :
+        H.g o f ~ {A} {\lam a => A} id =>
+        ~.tran {A}{\lam a => A}{H.g o f} {H.h o f}{id} (g_o_f~h_o_f f H) H.beta
+    }
+  }
+
+-- we will later show that isequiv f is (-1)-truncation, so any two inhabitants are equal.
+
+\func \infix 2 ISO (A : \Type) (B : \Type) : \Type => Equiv {A}{B} \where
+{
+  \func refl {A : \Type} : A ISO A => isequiv.from_qinv id qinv.id_is
+
+  \func symm {A B : \Type} (alpha : A ISO B) : B ISO A =>
+    isequiv.from_qinv alpha.g (qinv.symm alpha.f (isequiv.to_qinv alpha))
+
+  \func tran {A B C : \Type} (alpha : A ISO B) (beta : B ISO C) : A ISO C =>
+    isequiv.from_qinv (beta.f o alpha.f) (qinv.tran alpha.f beta.f (isequiv.to_qinv alpha) (isequiv.to_qinv beta))
+}

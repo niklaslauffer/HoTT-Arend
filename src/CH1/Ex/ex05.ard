@@ -1,4 +1,4 @@
-\import CH1.Def.Two
+\import CH1.Def.two
 
 \func \infixr 2 ++ (A B : \Type) : \Type => \Sigma (b : Two) (Two.rec \Type A B b)
 
