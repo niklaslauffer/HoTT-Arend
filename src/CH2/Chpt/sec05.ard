@@ -1,0 +1,12 @@
+-- 2.5 higher groupoid structure of type formers.
+
+{-- given a type A like B xx C, we want to characterize the equality type x ={A} y. In the next few chapters, we will
+start doing that with Product Types, Sigma types. It turns out the type theory we have develope so far can't determine
+the equality types of two important types : the Pi type as well as the Universe.
+The equality type for the Pi type is determined by function extensionality, which says that two functions are the same
+iff they are homotopically equal, aka (f = g) = (f ~ g), so functions are determined by their values on points.
+The equality type for the Universe type, aka asking the structure of A = B for A, B : \Type is a deeper question.
+Veveodosky came up with the univalence axiom, which says that (A = B) ISO (A ISO B), this is the univalence axiom,
+and it is the starting point of homotopic type theory.
+ -}
+
