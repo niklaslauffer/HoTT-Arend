@@ -8,7 +8,9 @@
 -- we are going to explore the structures of identity type from the inductor.
 
 -- we recall the important part of the definition of the inductor of the identity type:
+
 \import CH1.Def.path
+
 {-
 \func J {A : \Type} (C : \Pi (x y : A) -> x = y -> \Type) (c : \Pi(x : A) -> C x x idp)
         (x y : A) (p : x = y) : C x y p \elim p
@@ -27,11 +29,12 @@
 
 -- transitivity of equality, or that path concatenates, again we have idp * idp :== idp:
 
-\func concat {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z)
- => J (D) (J E e) x y p z q \where
+\func concat {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z) => J (D) (J E e) x y p z q \where
 {
   \func D {A : \Type} (x y : A) (p : x = y) : \Type => \Pi(z : A) (y = z) -> x = z
+
   \func E {A : \Type} (x z : A) (q : x = z) : \Type => x = z
+
   \func e {A : \Type} (x : A) : E x x idp => idp
 }
 
@@ -57,25 +60,26 @@ The second argument to J can only be idp and since as stated in chapter one, whe
 \func inv {A : \Type} {x  y : A} (p : x = y) : (y = x) \elim p
   | idp => idp
   \where
-{
-  -- this shows that reflexivity idp is the unit object with respect to concatenation.
+  {
+    -- this shows that reflexivity idp is the unit object with respect to concatenation.
 
-  \func r_inverse {A : \Type} {x y : A} {p : x = y} : inv p * p = idp \elim p
-    | idp => idp
+    \func r_inverse {A : \Type} {x y : A} {p : x = y} : inv p * p = idp \elim p
+      | idp => idp
 
-  \func l_inverse {A : \Type} {x y : A} {p : x = y} : p * inv p = idp \elim p
-    | idp => idp
+    \func l_inverse {A : \Type} {x y : A} {p : x = y} : p * inv p = idp \elim p
+      | idp => idp
 
-  -- this shows that inverse path is infact the inverse.
+    -- this shows that inverse path is infact the inverse.
 
-  \func involutive {A : \Type} (x y : A) (p : x = y) : inv (inv p) = p \elim p
-    | idp => idp
+    \func involutive {A : \Type} (x y : A) (p : x = y) : inv (inv p) = p \elim p
+      | idp => idp
 
-  -- lastly, we are going to show that concatenation is "homotopically" associative:
-  \func assoc {A : \Type} {x y z w : A} (p : x = y) (q : y = z) (r : z = w) :
-    p * (q * r) = (p * q) * r \elim p,q,r
-    | idp, idp, idp => idp
-}
+    -- lastly, we are going to show that concatenation is "homotopically" associative:
+
+    \func assoc {A : \Type} {x y z w : A} (p : x = y) (q : y = z) (r : z = w) :
+      p * (q * r) = (p * q) * r \elim p,q,r
+      | idp, idp, idp => idp
+  }
 
 {- note now that we have associativity, there are two ways to go from
 p * (q * (r * s)) to (p * q) * r) * s, and one can ask how these two equalities are the same.
@@ -109,8 +113,7 @@ p * (q * (r * s)) to (p * q) * r) * s, and one can ask how these two equalities 
   | idp => inv (*.l_unit r) * beta * *.l_unit s
 
 \func \infixl 5 ** {A : \Type} {a b c : A} {p q : a = b} {r s : b = c}
-                   (alpha : p = q) (beta : r = s) : p * r = q * s
-  => alpha *r r * q *l beta
+                   (alpha : p = q) (beta : r = s) : p * r = q * s => alpha *r r * q *l beta
 
 -- now let's define the star operation on second loop space:
 

@@ -72,6 +72,7 @@
 -- moving on to types, we call a function f : A -> B an isomorphism if there is an inverse g that compose both ways to identity.
 -- In homotopy theory, we call this a homotopy equivalence. Note that the trivial definition is actually not the one that we want.
 -- this is because in fact this choice is not contractible, we call such data quasi-inverse
+
 \record qinv {A B : \Type} (f : A -> B)
 {
   | g : B -> A
@@ -79,7 +80,6 @@
   | beta  : g o f ~ {A} {\lam a => A} id
 }\where
 {
-
   \func symm {A B : \Type} (f : A -> B) (H : qinv f) : qinv H.g => \new qinv H.g f H.beta H.alpha
 
   \func tran {A B C : \Type} (f : A -> B) (f' : B -> C) (H : qinv f) (H' : qinv f') : qinv (f' o f) =>
@@ -94,6 +94,7 @@
       \func qhelp2 {A B C : \Type} (f : A -> B) (f' : B -> C) (H : qinv f) (H' : qinv f') :
         H.g o H'.g o f' o f  ~{A}{\lam c => A} H.g o f => \lam a => H.g $ (H'.beta (f a))
     }
+
   -- identity always have a quasi-inverse:
 
   \func id_is {A : \Type} : qinv id => \new qinv id (id {A}) (\lam x => idp) (\lam x => idp)
@@ -117,7 +118,7 @@
 \func isequiv {A B : \Type} (f : A -> B) : \Type => Equiv f
   \where
   {
-    \func from_qinv {A B : \Type} (f : A -> B) (H : qinv f) : isequiv f => \new Equiv f H.g H.alpha H.g H.beta
+    \func fr_qinv {A B : \Type} (f : A -> B) (H : qinv f) : isequiv f => \new Equiv f H.g H.alpha H.g H.beta
 
     -- We want to build the reverse so let's construct the parts
 
@@ -150,11 +151,11 @@
 
 \func \infix 2 ISO (A : \Type) (B : \Type) : \Type => Equiv {A}{B} \where
 {
-  \func refl {A : \Type} : A ISO A => isequiv.from_qinv id qinv.id_is
+  \func refl {A : \Type} : A ISO A => isequiv.fr_qinv id qinv.id_is
 
   \func symm {A B : \Type} (alpha : A ISO B) : B ISO A =>
-    isequiv.from_qinv alpha.g (qinv.symm alpha.f (isequiv.to_qinv alpha))
+    isequiv.fr_qinv alpha.g (qinv.symm alpha.f (isequiv.to_qinv alpha))
 
   \func tran {A B C : \Type} (alpha : A ISO B) (beta : B ISO C) : A ISO C =>
-    isequiv.from_qinv (beta.f o alpha.f) (qinv.tran alpha.f beta.f (isequiv.to_qinv alpha) (isequiv.to_qinv beta))
+    isequiv.fr_qinv (beta.f o alpha.f) (qinv.tran alpha.f beta.f (isequiv.to_qinv alpha) (isequiv.to_qinv beta))
 }

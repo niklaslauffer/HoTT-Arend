@@ -1,0 +1,74 @@
+\import CH1.Def.product
+\import CH1.Def.comp
+\import CH1.Def.path
+\import CH2.Chpt.sec02
+\import CH2.Chpt.sec03
+\import CH2.Chpt.sec04
+
+-- 2.6 Cartesian Product Types
+
+{- Given types A and B, consider the product type A xx B. For any elements x, y : A xx B, we are going to show that
+the canonical projection maps (x = y) -> (x.1 = y.1) xx (x.2 = y.2) is an equivalence.
+ -}
+
+-- first we actually construct the canonical maps:
+
+\func p0 {A B : \Type} (x : A xx B) => xx.pr0 x
+
+\func p1 {A B : \Type} (x : A xx B) => xx.pr1 x
+
+\func p0= {A B : \Type} {a b : A xx B} (p : a = b) : p0 a = p0 b => p0 $ p
+
+\func p1= {A B : \Type} {a b : A xx B} (p : a = b) : p1 a = p1 b => p1 $ p
+
+-- now we are going to find an inhabitant of isequiv =xx->=Axx=B, the first step is find the inverse map:
+
+\func =xxISO=Axx=B {A B : \Type} {x y : A xx B} : (x = y) ISO (p0 x = p0 y) xx (p1 x = p1 y) =>
+  isequiv.fr_qinv =xx->=Axx=B qinv_=xx->=Axx=B \where
+{
+  \func =xx->=Axx=B {A B : \Type} {x y : A xx B} (p : x = y) : (p0 x = p0 y) xx (p1 x = p1 y) => (p0 $ p, p1 $ p)
+
+  \func =Axx=B->=xx {A B : \Type} {x y : A xx B} (p : (p0 x = p0 y) xx (p1 x = p1 y)) : x = y \elim x, y, p
+    | (a,b), (c,d), (idp,idp) => idp
+
+  \func qinv_=xx->=Axx=B {A B : \Type} {x y : A xx B} : qinv (=xx->=Axx=B {A}{B}{x}{y}) =>
+    \new qinv {
+      | g => =Axx=B->=xx
+      | alpha => \lam p => fg~id x y p
+      | beta => \lam p => gf~id x y p
+    } \where
+  {
+    \func fg~id {A B : \Type} (x y : A xx B) (p : (p0 x = p0 y) xx (p1 x = p1 y)) :
+      (=xx->=Axx=B o =Axx=B->=xx) p = p \elim y, p
+      | (a,b),(idp, idp) => idp
+
+    \func gf~id {A B : \Type} (x y : A xx B) (p : x = y) : (=Axx=B->=xx o =xx->=Axx=B) p = p \elim p
+      | idp => idp
+  }
+}
+
+{-  note that we can think about xx=inverse, which we will also denote as pair=, can be viewed as a constructor
+for x = y. By the same note, we have xx=func as the eliminator, and the two homotopies plays role of the propositional
+computation rules and the propositional uniqueness principle. This is another way to view about we are doing,
+which is we are propositionally (doing it in the type theory) constructing the type x = y for x, y : A xx B
+ -}
+
+\func pair= {A B : \Type} {x y : A xx B} : (x.1 = y.1) xx (x.2 = y.2) -> x = y => =xxISO=Axx=B.=Axx=B->=xx
+
+-- now considering a tranport in a pointwise product of type families:
+
+\func \infix 2 XX {Z : \Type} (A B : Z -> \Type) : Z -> \Type => \lam z => (A z) xx (B z)
+
+-- given p : z = w, x : A(z) xx B(z), we can transport x along p to get something in A(w) xx B(x).
+
+\func XXtransport {Z : \Type} {z w : Z} (A B : Z -> \Type) (p : z = w) (x : A(z) xx B(z)) :
+  transport (A XX B) p x = (transport A p (p0 x) , transport B p (p1 x)) \elim p, x
+  | idp, (a,b) => idp
+
+-- now we can consider functoriality of ap under Cartesian products.
+
+\func \infix 10 Xx {A B A' B' : \Type} (g : A -> A')(h : B -> B') : A xx B -> A' xx B' => \lam x => (g x.1, h x.2)
+
+\func ap_with_product {A B A' B' : \Type} {x y : A xx B} (g : A -> A')(h : B -> B')(r : x.1 = y.1) (s : x.2 = y.2) :
+  g Xx h $ pair= (r,s) = pair= (g $ r , h $ s) \elim x, r, s
+  | (a,b), idp ,idp => idp

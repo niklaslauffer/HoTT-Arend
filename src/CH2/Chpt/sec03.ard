@@ -1,10 +1,13 @@
 \import CH2.Chpt.sec01
 \import CH2.Chpt.sec02
+
 -- 2.3 Type Familes of Fibrations
 
 -- we want a dependent version of this, but we first need to have a transport along fibers,
 -- this is also called the "indescernibility of identicals" if we have P(x) propositions.
+
 \import CH1.Def.path
+
 \func transport {A : \Type} {x y : A} (P : A -> \Type) (p : x = y) (u : P x) : P y \elim p
   | idp => id u
 
@@ -21,7 +24,7 @@
 \func lift {A : \Type} {x y : A}
            (P : A -> \Type) (u : P x) (p : x = y) :
   (x,u) = {A && P} (y, transport P p u) \elim p
- | idp => idp
+  | idp => idp
 
 -- now we can show that this path covers p down below:
 
@@ -52,17 +55,18 @@
 -- where is some more homotopy coherence for transport:
 
 \func t_commute_with_concat {A : \Type} {P : A -> \Type} {x y z : A}
-                                 (p : x = y) (q : y = z) (u : P x) :
+                            (p : x = y) (q : y = z) (u : P x) :
   transport P q (transport P p u) = transport P (p * q) u \elim p, q
   | idp, idp => idp
 
 \import CH1.Def.comp
+
 \func t_with_ap {A B : \Type} {x y : A} (f : A -> B) (P : B -> \Type) (p : x = y) (u : P (f x)) :
   transport (P o f) p u = transport P (ap f p) u \elim p
   | idp => idp
 
 \func t_with_fam_funcs {A : \Type} {x y : A}
-                        (P Q : A -> \Type) (f : \Pi (x : A) -> P x -> Q x)
+                       (P Q : A -> \Type) (f : \Pi (x : A) -> P x -> Q x)
                        (p : x = y) (u : P x) :
   transport Q p (f x u) = f y (transport P p u) \elim p
   | idp => idp

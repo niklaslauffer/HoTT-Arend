@@ -8,7 +8,8 @@
 to paths, and higher paths to higher paths. Topologically, we see that all functions are "continuous" -}
 
 -- functions take paths to paths, and it takes reflexivity to reflexivity:
-\func ap \alias \infixr 10 $ {A B : \Type} {x y : A} (f : A -> B) (p : x = y) : f x = f y \elim p
+
+\func ap \alias \infixr 9 $ {A B : \Type} {x y : A} (f : A -> B) (p : x = y) : f x = f y \elim p
   | idp => idp \where
 {
   -- recall that we used ap_succ => ap succ in CH1.Chpt.sec09
@@ -40,5 +41,6 @@ to paths, and higher paths to higher paths. Topologically, we see that all funct
                       (p : x = y) :
     ap id p = p \elim p
     | idp => idp
+
   -- note that these rules themselves have higher coherence laws.
 }
