@@ -53,7 +53,7 @@ computation rules and the propositional uniqueness principle. This is another wa
 which is we are propositionally (doing it in the type theory) constructing the type x = y for x, y : A xx B
  -}
 
-\func pair= {A B : \Type} {x y : A xx B} : (x.1 = y.1) xx (x.2 = y.2) -> x = y => =xxISO=Axx=B.=Axx=B->=xx
+\func pair= {A B : \Type} {x y : A xx B} : (p0 x = p0 y) xx (p1 x = p1 y) -> x = y => =xxISO=Axx=B.=Axx=B->=xx
 
 -- now considering a tranport in a pointwise product of type families:
 

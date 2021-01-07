@@ -1,0 +1,59 @@
+\import CH1.Def.depPair
+\import CH1.Def.comp
+\import CH2.Chpt.sec02
+\import CH2.Chpt.sec03
+\import CH2.Chpt.sec04
+
+-- Sigma Types
+
+-- Similar to the product type let us try to think about projecting A and P -> \Type
+
+\func p0 {A : \Type} (P : A -> \Type) (x : A && P) : A => x.1
+
+\func p1 {A : \Type} (P : A -> \Type) (x : A && P) : P x.1 => x.2
+
+\func p0= {A : \Type} (P : A -> \Type) {x y : A && P} (p : x = y) :
+  p0 P x = p0 P y => p0 P $ p
+
+\func p1= {A : \Type} (P : A -> \Type) {x y : A && P} (p : x = y) :
+  (p0= P p _* P) (p1 P x) = p1 P y \elim p
+  | idp => idp
+
+\func =&&ISO=A&&=P {A : \Type} {P : A -> \Type} {x y : A && P} :
+  (x = y) ISO (\Sigma (p : p0 P x = p0 P y) ((p _* P) (p1 P x) = p1 P y)) =>
+  isequiv.fr_qinv (=&&->=A&&=P P x y) (qinv_=&&->=A&&=P P x y)  \where
+{
+  \func =&&->=A&&=P {A : \Type} (P : A -> \Type) (x y : A && P) (p : x = y) :
+    \Sigma (p : p0 P x = p0 P y) ((p _* P) (p1 P x) = p1 P y) \elim p
+    | idp => (idp, idp)
+
+  \func qinv_=&&->=A&&=P {A : \Type} (P : A -> \Type) (x y : A && P) : qinv (=&&->=A&&=P P x y) => \new qinv {
+    | g => =A&&=P->=&& P x y
+    | alpha => \lam p => fg~id P p
+    | beta => \lam p => gf~id P p
+  } \where
+  {
+    \func =A&&=P->=&& {A : \Type} (P : A -> \Type) (x y : A && P)
+                      (p : \Sigma (p : p0 P x = p0 P y) ((p _* P) (p1 P x) = p1 P y)) :
+      x = y \elim x, y, p
+      | (x0, x1), (y0, y1), (idp, idp) => idp
+
+    \func gf~id {A : \Type} (P : A -> \Type) {x y : A && P} (p : x = y) :
+      (=A&&=P->=&& P x y o =&&->=A&&=P P x y) p = p \elim p
+      | idp => idp
+
+    \func fg~id {A : \Type} (P : A -> \Type) {x y : A && P}
+                (p : \Sigma (p : p0 P x = p0 P y) ((p _* P) (p1 P x) = p1 P y)) :
+      (=&&->=A&&=P P x y o =A&&=P->=&& P x y) p = p \elim x, y, p
+      | (x0, x1), (y0, y1), (idp,idp) => idp
+  }
+}
+
+\func pair= {A : \Type} (P : A -> \Type) (x y : A && P) :
+  \Sigma (p : p0 P x = p0 P y) ((p _* P) (p1 P x) = p1 P y) -> x = y => =&&ISO=A&&=P.qinv_=&&->=A&&=P.=A&&=P->=&& P x y
+
+\func action_of_transport_&& {A : \Type} (P : A -> \Type) (Q : A && P -> \Type)
+                             {x y : A} (p : x = y) (w : \Sigma (u : P x) (Q (x, u))) :
+  (p _* (\lam x => \Sigma (u : P x) (Q (x,u)))) w =
+  ((p _* P) w.1, (pair= P (x, w.1) (y, (p _* P) w.1) (p, idp) _* Q) w.2) \elim p
+  | idp => idp
