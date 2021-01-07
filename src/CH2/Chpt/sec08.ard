@@ -1,0 +1,27 @@
+\import CH1.Def.one
+\import CH1.Def.comp
+\import CH2.Chpt.sec04
+
+-- 2.8 The unit type
+
+-- We will just quickly prove the equality type of elements of the unit type.
+-- Theorem 2.8.1
+\func =OISOO (x y : One) : (x = y) ISO One => isequiv.fr_qinv (f x y) (qinv_starf x y) \where
+{
+  \func f (x y : One) (_ : x = y) : One => star
+  \func qinv_starf (x y : One) : (qinv (f x y)) => \new qinv (f x y) {
+    | g => finv x y
+    | alpha => \lam s => id_O x y s
+    | beta => \lam p => id_=O x y p
+  } \where
+  {
+    \func finv (x y : One) : One -> (x = y) \elim x, y
+      | star, star => \lam x => idp
+
+    \func id_O (x y s : One) : ((f x y) o (finv x y)) s = s \elim x, y, s
+      | star, star, star => idp
+
+    \func id_=O (x y : One) (p : x = y) : ((finv x y) o (f x y)) p = p \elim x, p
+      | star, idp => idp
+  }
+}
