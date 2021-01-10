@@ -1,0 +1,62 @@
+\module Path \where
+{
+  \func concat \alias \infixl 3 * {A : \Type} {x y z : A} (p : x = y) (q : y = z) : (x = z) \elim p,q
+    | idp, idp => idp
+
+  \func r_unit {A : \Type} {x y : A} (p : x = y) : p = p * idp \elim p
+    | idp => idp
+
+  \func l_unit {A : \Type} {x y : A} (p : x = y) : p = idp * p \elim p
+    | idp => idp
+
+  \func r_unit' {A : \Type} {x y : A} (p : x = y) : p * idp = p \elim p
+    | idp => idp
+
+  \func l_unit' {A : \Type} {x y : A} (p : x = y) : idp * p = p \elim p
+    | idp => idp
+
+  \func inv {A : \Type} {x  y : A} (p : x = y) : (y = x) \elim p
+    | idp => idp \where {
+
+    \func involutive {A : \Type} (x y : A) (p : x = y) : inv (inv p) = p \elim p
+      | idp => idp
+  }
+
+  \func r_inverse {A : \Type} {x y : A} {p : x = y} : inv p * p = idp \elim p
+    | idp => idp
+
+  \func l_inverse {A : \Type} {x y : A} {p : x = y} : p * inv p = idp \elim p
+    | idp => idp
+
+  \func assoc {A : \Type} {x y z w : A} (p : x = y) (q : y = z) (r : z = w) :
+    p * (q * r) = (p * q) * r \elim p,q,r
+    | idp, idp, idp => idp
+
+  \func assoc' {A : \Type} {x y z w : A} (p : x = y) (q : y = z) (r : z = w) :
+    (p * q) * r = p * (q * r) \elim p,q,r
+    | idp, idp, idp => idp
+
+  \func \infixl 4 *r {A : \Type} {a b c : A} {p q : a = b}
+                     (alpha : p = q) (r : b = c) :
+    p * r = q * r \elim r
+    | idp => r_unit' p * alpha * r_unit q
+
+  \func \infixl 4 *l {A : \Type} {a b c : A} (p : a = b) {r s : b = c}
+                     (beta : r = s) : p * r = p * s \elim p
+    | idp => l_unit' r * beta * l_unit s
+
+  \func \infixl 5 ** {A : \Type} {a b c : A} {p q : a = b} {r s : b = c}
+                     (alpha : p = q) (beta : r = s) : p * r = q * s => alpha *r r * q *l beta
+
+  \func \infixl 5 **' {A : \Type} {a b c : A} {p q : a = b} {r s : b = c}
+                      (alpha : p = q) (beta : r = s) : p * r = q * s =>
+    p *l beta * alpha *r s
+
+  \func sub_path {A : \Type} {a b : A} (p : a = b) : idp * p * idp = p \elim p
+    | idp => idp
+
+  \func **=**' {A : \Type} {a b c : A} {p q : a = b} {r s : b = c}
+               (alpha : p = q) (beta : r = s) : alpha ** beta = alpha **' beta
+  \elim p, r, alpha, beta
+    | idp, idp, idp , idp => idp
+}

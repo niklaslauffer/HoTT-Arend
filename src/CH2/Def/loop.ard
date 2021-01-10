@@ -1,0 +1,41 @@
+\import AS.group
+\import CH2.Def.path
+\import CH1.Def.comp
+
+\func P : \Type => \Sigma (A : \Type) A
+
+\func L : P -> P =>
+  \lam x => (x.2 = x.2, idp)
+
+\func O (n : Nat) (x : P) : P \elim n
+  | 0 => x
+  | suc n => L (O n x)
+
+\instance On+1Group (A : \Type) (a : A) (n : Nat) : Group (O (suc n) (A, a)).1
+  | * => Path.*
+  | *-assoc => Path.assoc'
+  | e => idp
+  | e-identl => Path.l_unit'
+  | e-identr => Path.r_unit'
+  | *-inverl => \lam p => (Path.inv p, Path.l_inverse, Path.r_inverse)
+
+\instance On+2Group (A : \Type) (a : A) (n : Nat) : Commgroup (O ((suc o suc) n) (A, a)).1
+  | * => Path.*
+  | *-assoc => Path.assoc'
+  | e => idp
+  | e-identl => Path.l_unit'
+  | e-identr => Path.r_unit'
+  | *-inverl => \lam p => (Path.inv p, Path.l_inverse, Path.r_inverse)
+  | *-comm => {?} \where
+{
+  \open Path
+  \func **=* {s : \Sigma (A : \Type) (a : A)} (alpha beta : (O 2 s).1) : alpha ** beta = alpha * beta =>
+    sub_path alpha ** sub_path beta
+
+  \func **'=* {s : \Sigma (A : \Type) (a : A)}
+              (alpha beta : (O 2 s).1) : alpha **' beta = beta * alpha => sub_path beta ** sub_path alpha
+
+  \func EckHil {s : \Sigma (A : \Type) (a : A)} {alpha beta : (O 2 s).1} : alpha * beta = beta * alpha =>
+    inv (**=* alpha beta) * **=**' alpha beta * **'=* alpha beta
+
+}
