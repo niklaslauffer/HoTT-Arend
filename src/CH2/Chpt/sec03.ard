@@ -8,11 +8,11 @@
 
 \import CH1.Def.path
 
-\func transport {A : \Type} {x y : A} (P : A -> \Type) (p : x = y) (u : P x) : P y \elim p
-  | idp => id u
+\func transport {A : \Type} {x y : A} (P : A -> \Type) (p : x = y) : P x -> P y \elim p
+  | idp => id
 
-\func \infixr 5 _* {A : \Type} {x y : A}  (p : x = y) (P : A -> \Type) (u : P x) : P y \elim p
-  | idp => id u
+\func \infixr 5 _* {A : \Type} {x y : A}  (p : x = y) (P : A -> \Type) : P x -> P y \elim p
+  | idp => id
 
 -- so transport along reflexivity is just the identity map P(x) -> P(x).
 

@@ -26,16 +26,15 @@
   | e-identl => Path.l_unit'
   | e-identr => Path.r_unit'
   | *-inverl => \lam p => (Path.inv p, Path.l_inverse, Path.r_inverse)
-  | *-comm => {?} \where
+  | *-comm => EckHil \where
 {
   \open Path
-  \func **=* {s : \Sigma (A : \Type) (a : A)} (alpha beta : (O 2 s).1) : alpha ** beta = alpha * beta =>
-    sub_path alpha ** sub_path beta
+  \func **=* {s : \Sigma (A : \Type) (a : A)} (alpha beta : (O 2 s).1) : alpha * beta = alpha ** beta =>
+    inv (sub_path alpha ** sub_path beta)
 
   \func **'=* {s : \Sigma (A : \Type) (a : A)}
               (alpha beta : (O 2 s).1) : alpha **' beta = beta * alpha => sub_path beta ** sub_path alpha
 
-  \func EckHil {s : \Sigma (A : \Type) (a : A)} {alpha beta : (O 2 s).1} : alpha * beta = beta * alpha =>
-    inv (**=* alpha beta) * **=**' alpha beta * **'=* alpha beta
-
+  \func EckHil {s : \Sigma (A : \Type) (a : A)} (alpha beta : (O 2 s).1) : alpha * beta = beta * alpha =>
+    **=* alpha beta * **=**' alpha beta * **'=* alpha beta
 }
