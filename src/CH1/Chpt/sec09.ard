@@ -1,13 +1,13 @@
 \import CH1.Chpt.sec04
 
--- we will use Arend has a built in natural type defined like so:
+-- Arend has a built in natural type defined like so:
 
 \data Nat
   | zero
   | succ Nat
 
-\cons 0 : Nat => zero
-\cons 1 : Nat => suc zero
+\cons z : Nat => zero
+\cons i : Nat => succ zero
 -- We will introduce it formally later on
 
 -- We are using pattern matching in order to define this with primative recursion
