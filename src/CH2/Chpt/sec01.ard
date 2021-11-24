@@ -163,7 +163,7 @@ p * (q * (r * s)) to (p * q) * r) * s, and one can ask how these two equalities 
 \func L : P -> P =>
   \lam x => (x.2 = x.2, idp)
 
--- inductively we can define the n-th loop space inductively:
+-- We can define the n-th loop space inductively:
 -- This will be denoted by big-O for Omega
 
 \func O (n : Nat) (x : P) : P \elim n
